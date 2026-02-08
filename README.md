@@ -3,7 +3,7 @@
 > 🇬🇧 **English** | [🇷🇺 Русский](README.ru.md)
 
 > **100% firmware reverse engineering** of the CLOU (Hopeland) CL7206C2 8-port UHF RFID fixed reader.
-> Proprietary binary protocol fully decoded. 43 functions decompiled. No vendor SDK required.
+> Proprietary binary protocol fully decoded. 67 functions decompiled. No vendor SDK required.
 
 ## 🎯 Project Goal
 
@@ -284,7 +284,7 @@ python3 cl7206c2_client.py 192.168.1.116 settrigger 1 3 4
 
 ## 🔬 Firmware Analysis — 100% Complete
 
-43 functions decompiled from unstripped ARM ELF binary (310 symbols). ~2900 lines of Python analysis. All significant application logic decoded.
+67 functions decompiled from unstripped ARM ELF binary (310 symbols). ~3400 lines of Python analysis. All significant application logic decoded.
 
 | Subsystem | Key Functions |
 |-----------|--------------|
@@ -295,13 +295,19 @@ python3 cl7206c2_client.py 192.168.1.116 settrigger 1 3 4
 | Config | `config_set_pra`, `config_get_pra`, `pram_p_array` (16 params) |
 | Triggers | `Triger_State_Machine`, `Triger_Manage` + 4 helpers |
 | Network | `tcp_recive`, `connect_manage`, `link_status_mornitor` |
-| GPIO | `gpio_init`, `gpio_relay_on_ctl`, `relay_timer_start` |
+| GPIO | `gpio_init`, `gpio_relay_on_ctl`, `relay_timer_start`, 6 ioctl helpers |
 | Wiegand | `WieGand_Data_Save` (EPC/TID, 300-entry circular buffer) |
 | Firmware OTA | `Upgrade_Process` (CRC32 + app signature verify) |
 | UDP discovery | `UDP_cmd_process` (frame: `^[mac][commands]$`) |
 | Watchdog | `fifo_write` → "reader process alive" / 2s → `feed_dog` |
 | Ethernet | `link_status_mornitor` — 3 failures → PHY reset cycle |
 | White list | `data_base_white_list_check` — **STUB** (returns 1, not implemented) |
+| Timers | `cpu_get_lltimer`, `cpu_diff_tick` (100ms ticks), `cpu_diff_us` (μs) |
+| Config file | `config_pram_init` (0x430 bytes), `config_reset` (preserves MAC!) |
+| Protocol parser | `protocol_data_process` — 7-state FSM, CRC verify, circular buffer |
+| Transfer | `transfer_to_pc` — TCP/serial/RS485 auto-detect, 3-fail socket reset |
+| Receive | `com_recive` — circular buffer read, EINTR/EAGAIN handling |
+| Reconnect | `client_mode_reconnect` — auto TCP reconnect every ~9s |
 
 ### Internal Architecture
 
@@ -347,6 +353,7 @@ cl7206c2-rfid/
     ├── trigger_system.py                        ← Trigger FSM + config builder
     ├── pram_p_array_decode.py                   ← Config parameter table decoder
     ├── remaining_subsystems.py                  ← Network, GPIO, DB, UDP subsystems
+    ├── utility_functions.py                     ← GPIO ioctl map, timers, config, protocol parser
     └── CL7206C2_strings.txt                     ← All 1206 extracted strings
 ```
 
