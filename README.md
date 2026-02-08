@@ -1,5 +1,7 @@
 # CLOU CL7206C2 UHF RFID Reader — Reverse Engineering & Tools
 
+> 🇬🇧 **English** | [🇷🇺 Русский](README.ru.md)
+
 > **Complete protocol reverse engineering** of the CLOU (Hopeland) CL7206C2 8-port UHF RFID fixed reader.
 > Proprietary binary protocol fully decoded from firmware. No vendor SDK or demo software required.
 
