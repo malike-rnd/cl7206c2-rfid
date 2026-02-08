@@ -21,6 +21,8 @@ Commands (GET):
   ping              Get ping/gateway config
   antenna <port>    Get antenna/RF port config (port 0-3)
   antennaall        Get all 4 antenna configs
+  trigger <gpi>     Get trigger config for GPI pin (0-3)
+  triggerall        Get all 4 trigger configs
   wiegand           Get Wiegand config
   server            Get server/client mode config
   com               Get COM/baud config
@@ -40,6 +42,9 @@ Commands (SET):
   settagtime <t>    Set tag cache time
   setping <0|1> <ip>  Set ping config
   setwiegand <en> <fmt> <bits>  Set Wiegand config
+  settrigger <gpi> <start> <stop>
+                    Set GPI trigger (gpi 0-3, modes: 0=off 1=rising 2=falling
+                    3=high 4=low 5=any 6=delay)
 
 Commands (ACTION):
   inventory         Start continuous inventory (Ctrl+C to stop)
@@ -708,6 +713,99 @@ class CL7206C2Client:
             cmd, sub, resp = result
             print(f"  Status: {resp.hex() if resp else 'no response'}")
         return result
+    
+    # ─── Trigger commands ───
+    
+    TRIGGER_MODES = {
+        0: 'Disabled', 1: 'Rising Edge', 2: 'Falling Edge',
+        3: 'Level HIGH', 4: 'Level LOW', 5: 'Any Edge', 6: 'Delay Timer'
+    }
+    
+    def get_trigger_config(self, gpi_pin):
+        """CMD=0x01, SUB=0x0C: Get trigger config for a GPI pin
+        
+        Trigger config is stored within antenna/trigger config block.
+        The GET command with the GPI pin index retrieves it.
+        """
+        result = self.send_command(0x01, 0x0C, bytes([gpi_pin]))
+        if result:
+            cmd, sub, payload = result
+            print(f"\n=== Trigger Config — GPI-{gpi_pin+1} (pin {gpi_pin}) ===")
+            if len(payload) >= 5:
+                pin = payload[0]
+                start_mode = payload[1]
+                cmd_len = (payload[2] << 8) | payload[3]
+                
+                print(f"  GPI pin:      {pin}")
+                print(f"  Start mode:   {self.TRIGGER_MODES.get(start_mode, start_mode)} ({start_mode})")
+                print(f"  RF cmd len:   {cmd_len}")
+                
+                if len(payload) >= 4 + cmd_len:
+                    rf_cmd = payload[4:4+cmd_len]
+                    print(f"  RF command:   {' '.join(f'{b:02X}' for b in rf_cmd)}")
+                
+                if len(payload) >= 4 + cmd_len + 1:
+                    stop_mode = payload[4 + cmd_len]
+                    print(f"  Stop mode:    {self.TRIGGER_MODES.get(stop_mode, stop_mode)} ({stop_mode})")
+            else:
+                print(f"  Raw: {payload.hex()}")
+        return result
+    
+    def get_all_triggers(self):
+        """Get trigger config for all 4 GPI pins"""
+        for pin in range(4):
+            self.get_trigger_config(pin)
+    
+    def set_trigger(self, gpi_pin, start_mode, stop_mode, delay_10ms=0):
+        """CMD=0x01, SUB=0x0B: Set trigger configuration
+        
+        Trigger modes:
+          0 = Disabled
+          1 = Rising edge  (LOW→HIGH)
+          2 = Falling edge (HIGH→LOW)
+          3 = Level HIGH
+          4 = Level LOW
+          5 = Any edge
+          6 = Delay timer stop (auto-stop after delay)
+        
+        Args:
+            gpi_pin:     0-3 (GPI input)
+            start_mode:  0-6 (start trigger condition)
+            stop_mode:   0-6 (stop trigger condition)
+            delay_10ms:  delay in 10ms units (only used when stop_mode=6)
+        """
+        # Build RF command for start inventory: CMD=0x02 SUB=0x10 LEN=0x0000
+        rf_cmd = bytes([0x02, 0x10, 0x00, 0x00])
+        cmd_len = len(rf_cmd)
+        
+        # Build trigger config blob:
+        # [gpi_pin][start_mode][cmd_len_hi][cmd_len_lo][rf_cmd...][stop_mode]
+        config = bytearray()
+        config.append(gpi_pin)
+        config.append(start_mode)
+        config.append((cmd_len >> 8) & 0xFF)
+        config.append(cmd_len & 0xFF)
+        config.extend(rf_cmd)
+        config.append(stop_mode)
+        
+        # If delay mode, append delay value
+        if stop_mode == 6 and delay_10ms > 0:
+            config.append((delay_10ms >> 8) & 0xFF)
+            config.append(delay_10ms & 0xFF)
+        
+        print(f"\n=== Set Trigger — GPI-{gpi_pin+1} ===")
+        print(f"  Start: {self.TRIGGER_MODES.get(start_mode, start_mode)}")
+        print(f"  Stop:  {self.TRIGGER_MODES.get(stop_mode, stop_mode)}")
+        if stop_mode == 6:
+            secs = delay_10ms / 100
+            print(f"  Delay: {delay_10ms} × 10ms = {secs:.1f}s")
+        print(f"  Config bytes: {config.hex()}")
+        
+        result = self.send_command(0x01, 0x0B, bytes(config))
+        if result:
+            cmd, sub, resp = result
+            print(f"  Status: {resp.hex() if resp else 'no response'}")
+        return result
         return result
     
     def set_dhcp(self, mode):
@@ -963,6 +1061,27 @@ def main():
                 client.set_ping(int(args[0]))
             else:
                 print("Usage: setping <0|1> [ip]")
+        elif command == 'settrigger':
+            if len(args) >= 3:
+                gpi = int(args[0])
+                start = int(args[1])
+                stop = int(args[2])
+                delay = int(args[3]) if len(args) >= 4 else 0
+                client.set_trigger(gpi, start, stop, delay)
+            else:
+                print("Usage: settrigger <gpi 0-3> <start_mode 0-6> <stop_mode 0-6> [delay_10ms]")
+                print("  Modes: 0=off 1=rising 2=falling 3=high 4=low 5=any 6=delay")
+                print("  Example: settrigger 0 1 0        # GPI-1 rising edge start, manual stop")
+                print("  Example: settrigger 0 1 6 3000   # GPI-1 rising start, auto-stop 30s")
+        
+        # ─── Trigger GET commands ───
+        elif command == 'trigger':
+            if args:
+                client.get_trigger_config(int(args[0]))
+            else:
+                print("Usage: trigger <gpi 0-3>")
+        elif command == 'triggerall':
+            client.get_all_triggers()
         
         # ─── Dangerous commands ───
         elif command == 'reboot':
