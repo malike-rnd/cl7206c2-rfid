@@ -3,7 +3,7 @@
 > 🇬🇧 **English** | [🇷🇺 Русский](README.ru.md)
 
 > **100% firmware reverse engineering** of the CLOU (Hopeland) CL7206C2 8-port UHF RFID fixed reader.
-> Proprietary binary protocol fully decoded. 67 functions decompiled. No vendor SDK required.
+> Proprietary binary protocol fully decoded. 80 functions decompiled. No vendor SDK required.
 
 ## 🎯 Project Goal
 
@@ -207,6 +207,14 @@ python3 cl7206c2_tool.py dump-config config_pram         # Decode config file of
 | 0x12 | 0x20 | **Tag Notification** (EPC + extra data) |
 | 0x12 | 0x30 | **Tag Notification** (EPC + TID) |
 
+### UDP Discovery Response (multicast 230.1.1.116)
+
+```
+^RFID_READER_INFORMATION:7206C2,DHCP_SW:{ON|OFF},IP:{ip},MASK:{mask},
+GATEWAY:{gw},MAC:{mac},PORT:{port},HOST_SERVER_IP:{srv_ip},
+HOST_SERVER_PORT:{srv_port},MODE:{SERVER|CLIENT},NET_STATE:{ACTIVE|INACTIVE}$
+```
+
 ---
 
 ## 📻 8-Antenna Architecture
@@ -284,7 +292,7 @@ python3 cl7206c2_client.py 192.168.1.116 settrigger 1 3 4
 
 ## 🔬 Firmware Analysis — 100% Complete
 
-67 functions decompiled from unstripped ARM ELF binary (310 symbols). ~3400 lines of Python analysis. All significant application logic decoded.
+80 functions decompiled from unstripped ARM ELF binary (310 symbols). ~4000 lines of Python analysis. All application logic decoded — only trivial getters/setters remain.
 
 | Subsystem | Key Functions |
 |-----------|--------------|
@@ -308,6 +316,12 @@ python3 cl7206c2_client.py 192.168.1.116 settrigger 1 3 4
 | Transfer | `transfer_to_pc` — TCP/serial/RS485 auto-detect, 3-fail socket reset |
 | Receive | `com_recive` — circular buffer read, EINTR/EAGAIN handling |
 | Reconnect | `client_mode_reconnect` — auto TCP reconnect every ~9s |
+| Wiegand TX | `WieGand_Send` — bit-level Wiegand-26/34/66 with 100μs pulses, 500ms min interval |
+| RS485 framing | `Rs485_data_process` + `Add_Rs485_Addr` — address byte insert/strip, CMD bit 5 flag |
+| TCP setup | `tcp_socket_setup` — **keepalive: 5s idle + 3×1s = 8s dead peer detection** |
+| Heartbeat | `heart_beat_manage` + `if_com_alive` — serial number gap ≥4 = dead |
+| Network init | `net_pram_init` — static IP or DHCP, MAC with fallback |
+| Firmware replace | `upgrade_instead_file` — backup to `/back_app`, white list upload mode |
 
 ### Internal Architecture
 
@@ -354,6 +368,7 @@ cl7206c2-rfid/
     ├── pram_p_array_decode.py                   ← Config parameter table decoder
     ├── remaining_subsystems.py                  ← Network, GPIO, DB, UDP subsystems
     ├── utility_functions.py                     ← GPIO ioctl map, timers, config, protocol parser
+    ├── final_functions.py                       ← Wiegand TX, RS485 framing, TCP keepalive, OTA
     └── CL7206C2_strings.txt                     ← All 1206 extracted strings
 ```
 
@@ -376,6 +391,12 @@ cl7206c2-rfid/
 ```
 
 **Status:** Protocol & firmware 100% decoded. Waiting for antennas and tags. ✅
+
+**Key findings for timing system:**
+- **No firmware dedup** — RF module cache handles sub-second repeats; client must dedup by EPC+antenna
+- **TCP keepalive 8s** — dead peer detected in 5s idle + 3×1s probes (aggressive, good for timing)
+- **Auto-reconnect ~17s** — 8s detection + 9s reconnect cycle = fast recovery
+- **Firmware backup** — OTA creates `/back_app`, recoverable via telnet if upgrade fails
 
 ---
 
