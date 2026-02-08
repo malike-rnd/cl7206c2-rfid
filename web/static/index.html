@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CL7206C2 RFID — Test Tool</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+
+  :root {
+    --bg-0: #0a0e14;
+    --bg-1: #0f1419;
+    --bg-2: #151b23;
+    --bg-3: #1a222d;
+    --border: #2a3444;
+    --border-hi: #3a4a5e;
+    --text-0: #d4dae4;
+    --text-1: #8899aa;
+    --text-2: #556677;
+    --green: #39e06c;
+    --green-dim: #1a5c30;
+    --red: #f04848;
+    --red-dim: #5c1a1a;
+    --amber: #f0a030;
+    --amber-dim: #5c4a1a;
+    --cyan: #38c8e8;
+    --cyan-dim: #1a4a5c;
+    --mono: 'JetBrains Mono', 'Fira Code', 'SF Mono', monospace;
+    --sans: 'IBM Plex Sans', -apple-system, sans-serif;
+    --radius: 6px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg-0);
+    color: var(--text-0);
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  /* ── Header ─────────────────────────────────────────── */
+  .header {
+    background: var(--bg-1);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .header-logo {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--cyan);
+  }
+
+  .header-logo span {
+    color: var(--text-2);
+    font-weight: 400;
+  }
+
+  .header-status {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text-1);
+  }
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--red);
+    transition: background 0.3s, box-shadow 0.3s;
+  }
+
+  .status-dot.on {
+    background: var(--green);
+    box-shadow: 0 0 8px var(--green);
+  }
+
+  /* ── Layout ─────────────────────────────────────────── */
+  .main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  /* ── Panel ──────────────────────────────────────────── */
+  .panel {
+    background: var(--bg-1);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .panel-head {
+    background: var(--bg-2);
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid var(--border);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-1);
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .panel-head .icon {
+    font-size: 14px;
+  }
+
+  .panel-head .badge {
+    margin-left: auto;
+    background: var(--bg-3);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 1px 8px;
+    font-size: 10px;
+    color: var(--text-2);
+    font-weight: 400;
+  }
+
+  .panel-body {
+    padding: 16px;
+  }
+
+  .panel.collapsed .panel-body {
+    display: none;
+  }
+
+  /* ── Connect Panel ──────────────────────────────────── */
+  .connect-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  input[type="text"], input[type="number"] {
+    background: var(--bg-0);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 7px 12px;
+    color: var(--text-0);
+    font-family: var(--mono);
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  input:focus {
+    border-color: var(--cyan);
+  }
+
+  input::placeholder {
+    color: var(--text-2);
+  }
+
+  .ip-input { width: 180px; }
+  .port-input { width: 80px; }
+
+  /* ── Buttons ────────────────────────────────────────── */
+  .btn {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 7px 16px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.15s;
+    background: var(--bg-2);
+    color: var(--text-0);
+    letter-spacing: 0.5px;
+  }
+
+  .btn:hover { border-color: var(--border-hi); background: var(--bg-3); }
+  .btn:active { transform: scale(0.97); }
+  .btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  .btn-green { border-color: var(--green-dim); color: var(--green); }
+  .btn-green:hover { background: var(--green-dim); border-color: var(--green); }
+
+  .btn-red { border-color: var(--red-dim); color: var(--red); }
+  .btn-red:hover { background: var(--red-dim); border-color: var(--red); }
+
+  .btn-amber { border-color: var(--amber-dim); color: var(--amber); }
+  .btn-amber:hover { background: var(--amber-dim); border-color: var(--amber); }
+
+  .btn-cyan { border-color: var(--cyan-dim); color: var(--cyan); }
+  .btn-cyan:hover { background: var(--cyan-dim); border-color: var(--cyan); }
+
+  /* ── Info Grid ──────────────────────────────────────── */
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+  }
+
+  .info-cell {
+    background: var(--bg-0);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 8px 12px;
+  }
+
+  .info-cell .label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-2);
+    margin-bottom: 3px;
+  }
+
+  .info-cell .value {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--cyan);
+    word-break: break-all;
+  }
+
+  .info-cell .value.green { color: var(--green); }
+  .info-cell .value.amber { color: var(--amber); }
+  .info-cell .value.red { color: var(--red); }
+
+  /* ── Time Panel ─────────────────────────────────────── */
+  .time-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .time-display {
+    background: var(--bg-0);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 10px 16px;
+    text-align: center;
+    flex: 1;
+    min-width: 180px;
+  }
+
+  .time-display .label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-2);
+    margin-bottom: 4px;
+  }
+
+  .time-display .clock {
+    font-size: 22px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .drift-indicator {
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 3px;
+    font-weight: 500;
+  }
+
+  .drift-ok { color: var(--green); background: var(--green-dim); }
+  .drift-warn { color: var(--amber); background: var(--amber-dim); }
+  .drift-bad { color: var(--red); background: var(--red-dim); }
+
+  /* ── Inventory ──────────────────────────────────────── */
+  .inv-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+
+  .inv-stats {
+    margin-left: auto;
+    display: flex;
+    gap: 16px;
+    font-size: 12px;
+    color: var(--text-1);
+  }
+
+  .inv-stats span { color: var(--green); font-weight: 600; }
+
+  .tag-table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    max-height: 400px;
+    overflow-y: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+
+  th {
+    background: var(--bg-2);
+    padding: 8px 12px;
+    text-align: left;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-2);
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    border-bottom: 1px solid var(--border);
+  }
+
+  td {
+    padding: 6px 12px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-0);
+    font-variant-numeric: tabular-nums;
+  }
+
+  tr:hover td { background: var(--bg-2); }
+
+  tr.new-tag td {
+    animation: tagFlash 0.6s ease-out;
+  }
+
+  @keyframes tagFlash {
+    0% { background: var(--green-dim); }
+    100% { background: transparent; }
+  }
+
+  .epc-cell {
+    font-weight: 500;
+    color: var(--cyan);
+    letter-spacing: 0.5px;
+  }
+
+  .ant-cell { color: var(--amber); font-weight: 600; }
+
+  /* ── Log ─────────────────────────────────────────────── */
+  .log-output {
+    background: var(--bg-0);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 10px 14px;
+    height: 150px;
+    overflow-y: auto;
+    font-size: 11px;
+    line-height: 1.6;
+    color: var(--text-1);
+  }
+
+  .log-output .log-line {
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+
+  .log-output .ts { color: var(--text-2); }
+  .log-output .ok { color: var(--green); }
+  .log-output .err { color: var(--red); }
+  .log-output .warn { color: var(--amber); }
+  .log-output .info { color: var(--cyan); }
+
+  /* ── Config Panel ───────────────────────────────────── */
+  .config-section {
+    margin-bottom: 16px;
+  }
+
+  .config-section:last-child { margin-bottom: 0; }
+
+  .config-section h3 {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-2);
+    margin-bottom: 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .config-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+
+  .config-row label {
+    font-size: 12px;
+    color: var(--text-1);
+    min-width: 100px;
+  }
+
+  select {
+    background: var(--bg-0);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 6px 10px;
+    color: var(--text-0);
+    font-family: var(--mono);
+    font-size: 12px;
+    outline: none;
+  }
+
+  select:focus { border-color: var(--cyan); }
+
+  /* ── Responsive ─────────────────────────────────────── */
+  @media (max-width: 600px) {
+    .main { padding: 12px; }
+    .info-grid { grid-template-columns: 1fr; }
+    .time-row { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════ HEADER ═══════════════════════ -->
+<div class="header">
+  <div class="header-logo">CL7206C2 <span>RFID TEST TOOL</span></div>
+  <div class="header-status">
+    <div class="status-dot" id="statusDot"></div>
+    <span id="statusText">Disconnected</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════ MAIN ═════════════════════════ -->
+<div class="main">
+
+  <!-- ── CONNECT ────────────────────────────────────── -->
+  <div class="panel" id="panelConnect">
+    <div class="panel-head" onclick="togglePanel('panelConnect')">
+      <span class="icon">⬡</span> Connection
+    </div>
+    <div class="panel-body">
+      <div class="connect-row">
+        <input type="text" class="ip-input" id="inputIP" placeholder="192.168.1.116" value="192.168.1.116">
+        <span style="color:var(--text-2)">:</span>
+        <input type="number" class="port-input" id="inputPort" value="9090">
+        <button class="btn btn-green" id="btnConnect" onclick="doConnect()">CONNECT</button>
+        <button class="btn btn-red" id="btnDisconnect" onclick="doDisconnect()" disabled>DISCONNECT</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── READER INFO ────────────────────────────────── -->
+  <div class="panel collapsed" id="panelInfo">
+    <div class="panel-head" onclick="togglePanel('panelInfo')">
+      <span class="icon">◈</span> Reader Info
+      <span class="badge" id="badgeInfo">—</span>
+    </div>
+    <div class="panel-body">
+      <div class="info-grid" id="infoGrid">
+        <div class="info-cell"><div class="label">Status</div><div class="value" id="infoStatus">—</div></div>
+      </div>
+      <div style="margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap;">
+        <button class="btn" onclick="loadInfo()">Refresh Info</button>
+        <button class="btn" onclick="loadNetwork()">Network</button>
+        <button class="btn" onclick="loadAntennas()">Antennas</button>
+        <button class="btn" onclick="loadTriggers()">Triggers</button>
+        <button class="btn" onclick="loadWiegand()">Wiegand</button>
+        <button class="btn" onclick="loadRS485()">RS485</button>
+        <button class="btn" onclick="loadTags()">Stored Tags</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TIME SYNC ──────────────────────────────────── -->
+  <div class="panel collapsed" id="panelTime">
+    <div class="panel-head" onclick="togglePanel('panelTime')">
+      <span class="icon">◷</span> Time Sync
+      <span class="badge" id="badgeDrift">—</span>
+    </div>
+    <div class="panel-body">
+      <div class="time-row">
+        <div class="time-display">
+          <div class="label">PC Time</div>
+          <div class="clock" id="clockPC">--:--:--</div>
+        </div>
+        <div class="time-display">
+          <div class="label">Reader Time</div>
+          <div class="clock" id="clockReader">--:--:--</div>
+        </div>
+        <div style="text-align: center;">
+          <div class="label" style="font-size:10px;color:var(--text-2);margin-bottom:4px;">DRIFT</div>
+          <div class="drift-indicator" id="driftValue">—</div>
+        </div>
+      </div>
+      <div style="margin-top: 12px; display: flex; gap: 8px;">
+        <button class="btn btn-cyan" onclick="syncTime()">SYNC TIME → READER</button>
+        <button class="btn" onclick="loadTime()">Refresh</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── CONFIG ─────────────────────────────────────── -->
+  <div class="panel collapsed" id="panelConfig">
+    <div class="panel-head" onclick="togglePanel('panelConfig')">
+      <span class="icon">⚙</span> Configuration
+    </div>
+    <div class="panel-body">
+      <!-- Antennas -->
+      <div class="config-section">
+        <h3>Antenna Power</h3>
+        <div id="antennaControls"></div>
+      </div>
+
+      <!-- Relay -->
+      <div class="config-section">
+        <h3>Relays</h3>
+        <div class="config-row">
+          <label>Relay 1</label>
+          <button class="btn btn-amber" onclick="fireRelay(1, 1000)">PULSE 1s</button>
+          <button class="btn btn-amber" onclick="fireRelay(1, 3000)">PULSE 3s</button>
+        </div>
+        <div class="config-row">
+          <label>Relay 2</label>
+          <button class="btn btn-amber" onclick="fireRelay(2, 1000)">PULSE 1s</button>
+          <button class="btn btn-amber" onclick="fireRelay(2, 3000)">PULSE 3s</button>
+        </div>
+      </div>
+
+      <!-- System -->
+      <div class="config-section">
+        <h3>System</h3>
+        <div class="config-row">
+          <button class="btn btn-red" onclick="doReboot()">REBOOT READER</button>
+          <button class="btn" onclick="doClearTags()">CLEAR TAG DB</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── INVENTORY ──────────────────────────────────── -->
+  <div class="panel" id="panelInventory">
+    <div class="panel-head" onclick="togglePanel('panelInventory')">
+      <span class="icon">⊛</span> Tag Inventory
+      <span class="badge" id="badgeTags">0 tags</span>
+    </div>
+    <div class="panel-body">
+      <div class="inv-controls">
+        <button class="btn btn-green" id="btnStart" onclick="startInventory()" disabled>▶ START</button>
+        <button class="btn btn-red" id="btnStop" onclick="stopInventory()" disabled>■ STOP</button>
+        <button class="btn" onclick="clearTagTable()">CLEAR</button>
+        <div class="inv-stats">
+          Total: <span id="statTotal">0</span>
+          &nbsp;|&nbsp; Unique: <span id="statUnique">0</span>
+          &nbsp;|&nbsp; Rate: <span id="statRate">0</span>/s
+        </div>
+      </div>
+      <div class="tag-table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>EPC</th>
+              <th>ANT</th>
+              <th>RSSI</th>
+              <th>COUNT</th>
+              <th>FIRST SEEN</th>
+              <th>LAST SEEN</th>
+            </tr>
+          </thead>
+          <tbody id="tagTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── LOG ────────────────────────────────────────── -->
+  <div class="panel" id="panelLog">
+    <div class="panel-head" onclick="togglePanel('panelLog')">
+      <span class="icon">▤</span> Log
+      <span class="badge" id="badgeLog">0</span>
+    </div>
+    <div class="panel-body">
+      <div class="log-output" id="logOutput"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════════
+// State
+// ═══════════════════════════════════════════════════════════════════════════
+
+let connected = false;
+let ws = null;
+let inventoryRunning = false;
+let tagMap = {};       // EPC → { count, firstSeen, lastSeen, ant, rssi, row }
+let totalReads = 0;
+let uniqueCount = 0;
+let rateWindow = [];   // timestamps for rate calc
+let logCount = 0;
+let pcClockInterval = null;
+
+const API = '';  // same origin
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Utilities
+// ═══════════════════════════════════════════════════════════════════════════
+
+function $(id) { return document.getElementById(id); }
+
+function togglePanel(id) {
+  $(id).classList.toggle('collapsed');
+}
+
+function log(msg, cls = '') {
+  const el = $('logOutput');
+  const ts = new Date().toLocaleTimeString('en-GB', { hour12: false });
+  const line = document.createElement('div');
+  line.className = 'log-line';
+  line.innerHTML = `<span class="ts">[${ts}]</span> <span class="${cls}">${escHtml(msg)}</span>`;
+  el.appendChild(line);
+  el.scrollTop = el.scrollHeight;
+  logCount++;
+  $('badgeLog').textContent = logCount;
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function fmtTime(ts) {
+  if (!ts) return '—';
+  const d = new Date(ts * 1000);
+  return d.toLocaleTimeString('en-GB', { hour12: false });
+}
+
+function fmtTimeFull(ts) {
+  if (!ts) return '—';
+  const d = new Date(ts * 1000);
+  return d.toLocaleString('en-GB', { hour12: false });
+}
+
+async function api(method, path, body) {
+  try {
+    const opts = { method, headers: { 'Content-Type': 'application/json' } };
+    if (body) opts.body = JSON.stringify(body);
+    const res = await fetch(API + path, opts);
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.detail || `HTTP ${res.status}`);
+    }
+    return data;
+  } catch (e) {
+    log(`API error: ${path} — ${e.message}`, 'err');
+    throw e;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Connection
+// ═══════════════════════════════════════════════════════════════════════════
+
+function setConnected(state) {
+  connected = state;
+  $('statusDot').className = 'status-dot' + (state ? ' on' : '');
+  $('statusText').textContent = state ? 'Connected' : 'Disconnected';
+  $('btnConnect').disabled = state;
+  $('btnDisconnect').disabled = !state;
+  $('btnStart').disabled = !state;
+
+  if (state) {
+    $('panelInfo').classList.remove('collapsed');
+    $('panelTime').classList.remove('collapsed');
+    $('panelConfig').classList.remove('collapsed');
+  }
+}
+
+async function doConnect() {
+  const ip = $('inputIP').value.trim();
+  const port = parseInt($('inputPort').value) || 9090;
+  if (!ip) { log('Enter IP address', 'warn'); return; }
+
+  $('btnConnect').disabled = true;
+  log(`Connecting to ${ip}:${port}...`, 'info');
+
+  try {
+    await api('POST', '/api/connect', { ip, port });
+    setConnected(true);
+    log(`Connected to ${ip}:${port}`, 'ok');
+
+    // Auto-load basic info
+    await loadInfo();
+    await loadTime();
+    await loadAntennaControls();
+  } catch (e) {
+    setConnected(false);
+    $('btnConnect').disabled = false;
+  }
+}
+
+async function doDisconnect() {
+  if (inventoryRunning) stopInventory();
+  try {
+    await api('POST', '/api/disconnect');
+  } catch(e) {}
+  setConnected(false);
+  log('Disconnected', 'warn');
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Reader Info
+// ═══════════════════════════════════════════════════════════════════════════
+
+async function loadInfo() {
+  try {
+    const info = await api('GET', '/api/info');
+    const grid = $('infoGrid');
+    grid.innerHTML = '';
+    for (const [key, val] of Object.entries(info)) {
+      const cell = document.createElement('div');
+      cell.className = 'info-cell';
+      cell.innerHTML = `<div class="label">${escHtml(key)}</div><div class="value">${escHtml(String(val))}</div>`;
+      grid.appendChild(cell);
+    }
+    $('badgeInfo').textContent = info.model || 'OK';
+    log('Reader info loaded', 'ok');
+  } catch(e) {}
+}
+
+async function loadNetwork() {
+  try {
+    const info = await api('GET', '/api/network');
+    const mac = await api('GET', '/api/mac');
+    const srv = await api('GET', '/api/server');
+    const all = { ...info, ...mac, ...srv };
+    showInfoOverlay('Network', all);
+  } catch(e) {}
+}
+
+async function loadAntennas() {
+  try {
+    const data = await api('GET', '/api/antennas');
+    showInfoOverlay('Antennas', data);
+  } catch(e) {}
+}
+
+async function loadTriggers() {
+  try {
+    const data = await api('GET', '/api/triggers');
+    showInfoOverlay('Triggers', data);
+  } catch(e) {}
+}
+
+async function loadWiegand() {
+  try {
+    const data = await api('GET', '/api/wiegand');
+    showInfoOverlay('Wiegand', data);
+  } catch(e) {}
+}
+
+async function loadRS485() {
+  try {
+    const data = await api('GET', '/api/rs485');
+    showInfoOverlay('RS485', data);
+  } catch(e) {}
+}
+
+async function loadTags() {
+  try {
+    const data = await api('GET', '/api/tags');
+    showInfoOverlay('Stored Tags', data);
+  } catch(e) {}
+}
+
+function showInfoOverlay(title, data) {
+  const grid = $('infoGrid');
+  grid.innerHTML = '';
+
+  function renderObj(obj, prefix = '') {
+    for (const [key, val] of Object.entries(obj)) {
+      if (typeof val === 'object' && val !== null && !Array.isArray(val)) {
+        renderObj(val, prefix + key + '.');
+      } else {
+        const cell = document.createElement('div');
+        cell.className = 'info-cell';
+        cell.innerHTML = `<div class="label">${escHtml(prefix + key)}</div><div class="value">${escHtml(String(val))}</div>`;
+        grid.appendChild(cell);
+      }
+    }
+  }
+
+  renderObj(data);
+  $('badgeInfo').textContent = title;
+  $('panelInfo').classList.remove('collapsed');
+  log(`Loaded: ${title}`, 'info');
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Time
+// ═══════════════════════════════════════════════════════════════════════════
+
+function startPCClock() {
+  if (pcClockInterval) clearInterval(pcClockInterval);
+  pcClockInterval = setInterval(() => {
+    $('clockPC').textContent = new Date().toLocaleTimeString('en-GB', { hour12: false });
+  }, 200);
+}
+startPCClock();
+
+async function loadTime() {
+  try {
+    const data = await api('GET', '/api/time');
+    if (data.reader_time_str) {
+      $('clockReader').textContent = data.reader_time_str;
+    }
+    if (data.drift_seconds !== undefined) {
+      const d = data.drift_seconds;
+      const abs = Math.abs(d);
+      const sign = d >= 0 ? '+' : '';
+      $('driftValue').textContent = `${sign}${d}s`;
+      $('badgeDrift').textContent = `${sign}${d}s`;
+
+      if (abs <= 1) {
+        $('driftValue').className = 'drift-indicator drift-ok';
+      } else if (abs <= 10) {
+        $('driftValue').className = 'drift-indicator drift-warn';
+      } else {
+        $('driftValue').className = 'drift-indicator drift-bad';
+      }
+    }
+    log(`Reader time: ${data.reader_time_str || '?'}, drift: ${data.drift_seconds || '?'}s`, 'info');
+  } catch(e) {}
+}
+
+async function syncTime() {
+  try {
+    const result = await api('POST', '/api/settime', {});
+    log('Time synced to reader', 'ok');
+    setTimeout(loadTime, 500);
+  } catch(e) {}
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Config — Antenna Power Controls
+// ═══════════════════════════════════════════════════════════════════════════
+
+async function loadAntennaControls() {
+  const container = $('antennaControls');
+  container.innerHTML = '';
+
+  try {
+    const data = await api('GET', '/api/antennas');
+    const ports = data.ports || data;
+
+    for (let i = 0; i < 4; i++) {
+      const portData = ports[`port_${i}`] || ports[i] || {};
+      const power = portData.power_dbm || portData.power || 26;
+
+      const row = document.createElement('div');
+      row.className = 'config-row';
+      row.innerHTML = `
+        <label>Port ${i}</label>
+        <input type="range" min="0" max="33" value="${power}" id="slider_ant_${i}"
+               style="width:120px;accent-color:var(--amber);"
+               oninput="$('val_ant_${i}').textContent=this.value+'dBm'">
+        <span id="val_ant_${i}" style="color:var(--amber);min-width:50px;">${power}dBm</span>
+        <button class="btn btn-amber" onclick="setPower(${i})">SET</button>
+      `;
+      container.appendChild(row);
+    }
+  } catch(e) {
+    container.innerHTML = '<div style="color:var(--text-2)">Load antennas after connecting</div>';
+  }
+}
+
+async function setPower(port) {
+  const power = parseInt($(`slider_ant_${port}`).value);
+  try {
+    await api('POST', '/api/setpower', { port, power_dbm: power });
+    log(`Antenna ${port} power set to ${power} dBm`, 'ok');
+  } catch(e) {}
+}
+
+async function fireRelay(num, ms) {
+  try {
+    await api('POST', '/api/setrelay', { relay_num: num, on_time_ms: ms });
+    log(`Relay ${num} pulsed for ${ms}ms`, 'ok');
+  } catch(e) {}
+}
+
+async function doReboot() {
+  if (!confirm('Reboot reader? Connection will be lost.')) return;
+  try {
+    await api('POST', '/api/reboot');
+    log('Reader rebooting (~20s)...', 'warn');
+    setConnected(false);
+  } catch(e) {}
+}
+
+async function doClearTags() {
+  try {
+    await api('POST', '/api/cleartags');
+    log('Tag database cleared', 'ok');
+  } catch(e) {}
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Inventory — WebSocket Tag Stream
+// ═══════════════════════════════════════════════════════════════════════════
+
+function startInventory() {
+  if (!connected || inventoryRunning) return;
+
+  const wsProto = location.protocol === 'https:' ? 'wss:' : 'ws:';
+  const wsUrl = `${wsProto}//${location.host}/ws/inventory`;
+
+  ws = new WebSocket(wsUrl);
+  ws.onopen = () => {
+    inventoryRunning = true;
+    $('btnStart').disabled = true;
+    $('btnStop').disabled = false;
+    ws.send(JSON.stringify({ action: 'start' }));
+    log('Inventory started', 'ok');
+  };
+
+  ws.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+
+    if (data.error) {
+      log(`Inventory error: ${data.error}`, 'err');
+      return;
+    }
+
+    if (data.status) {
+      log(`Inventory: ${data.status}`, 'info');
+      return;
+    }
+
+    if (data.type === 'tag') {
+      processTag(data);
+    }
+  };
+
+  ws.onclose = () => {
+    inventoryRunning = false;
+    $('btnStart').disabled = !connected;
+    $('btnStop').disabled = true;
+    log('Inventory WebSocket closed', 'warn');
+  };
+
+  ws.onerror = (e) => {
+    log('Inventory WebSocket error', 'err');
+  };
+}
+
+function stopInventory() {
+  if (ws && ws.readyState === WebSocket.OPEN) {
+    ws.send(JSON.stringify({ action: 'stop' }));
+  }
+  inventoryRunning = false;
+  $('btnStart').disabled = !connected;
+  $('btnStop').disabled = true;
+}
+
+function processTag(data) {
+  const epc = data.epc || data.raw_hex || '?';
+  const now = data.timestamp || Date.now() / 1000;
+
+  totalReads++;
+
+  // Rate calc
+  rateWindow.push(now);
+  while (rateWindow.length > 0 && rateWindow[0] < now - 1) rateWindow.shift();
+
+  if (tagMap[epc]) {
+    // Existing tag
+    const t = tagMap[epc];
+    t.count++;
+    t.lastSeen = now;
+    t.ant = data.antenna || data.ant_num || t.ant;
+    t.rssi = data.rssi || t.rssi;
+    updateTagRow(epc);
+  } else {
+    // New tag
+    uniqueCount++;
+    tagMap[epc] = {
+      count: 1,
+      firstSeen: now,
+      lastSeen: now,
+      ant: data.antenna || data.ant_num || '?',
+      rssi: data.rssi || '—',
+    };
+    addTagRow(epc);
+  }
+
+  // Update stats
+  $('statTotal').textContent = totalReads;
+  $('statUnique').textContent = uniqueCount;
+  $('statRate').textContent = rateWindow.length;
+  $('badgeTags').textContent = `${uniqueCount} tags`;
+}
+
+function addTagRow(epc) {
+  const tbody = $('tagTableBody');
+  const t = tagMap[epc];
+  const row = document.createElement('tr');
+  row.className = 'new-tag';
+  row.id = 'tag_' + epc;
+  row.innerHTML = `
+    <td>${uniqueCount}</td>
+    <td class="epc-cell">${escHtml(epc)}</td>
+    <td class="ant-cell">${t.ant}</td>
+    <td>${t.rssi}</td>
+    <td id="cnt_${epc}">${t.count}</td>
+    <td>${fmtTime(t.firstSeen)}</td>
+    <td id="last_${epc}">${fmtTime(t.lastSeen)}</td>
+  `;
+  tbody.insertBefore(row, tbody.firstChild);
+}
+
+function updateTagRow(epc) {
+  const t = tagMap[epc];
+  const cnt = document.getElementById('cnt_' + epc);
+  const last = document.getElementById('last_' + epc);
+  if (cnt) cnt.textContent = t.count;
+  if (last) last.textContent = fmtTime(t.lastSeen);
+
+  const row = document.getElementById('tag_' + epc);
+  if (row) {
+    row.className = 'new-tag';
+    setTimeout(() => { row.className = ''; }, 600);
+  }
+}
+
+function clearTagTable() {
+  $('tagTableBody').innerHTML = '';
+  tagMap = {};
+  totalReads = 0;
+  uniqueCount = 0;
+  rateWindow = [];
+  $('statTotal').textContent = '0';
+  $('statUnique').textContent = '0';
+  $('statRate').textContent = '0';
+  $('badgeTags').textContent = '0 tags';
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Init
+// ═══════════════════════════════════════════════════════════════════════════
+
+log('CL7206C2 RFID Test Tool ready', 'info');
+log('Enter reader IP and click CONNECT', 'info');
+</script>
+
+</body>
+</html>
