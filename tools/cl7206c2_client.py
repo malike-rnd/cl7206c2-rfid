@@ -7,31 +7,54 @@ Complete client based on reverse engineering of protocol_cmd_hdl()
 Usage:
   python3 cl7206c2_client.py <reader_ip> [port] <command> [args]
 
-Commands:
-  info            Get reader information
-  network         Get IP/Mask/Gateway
-  mac             Get MAC address
-  time            Get system time
-  settime <ts>    Set system time (unix timestamp, or 'now')
-  gpi             Read GPI input levels
-  gpo <n> <0|1>   Set GPO output
-  relay           Get relay config
-  rs485           Get RS485 config
-  tagcache        Get tag cache status
-  tagtime         Get tag cache time
-  tags            Get stored tag records
-  cleartags       Clear tag database
-  ping            Get ping/gateway config
-  dhcp <0|1>      Set DHCP mode (0=static, 1=DHCP)
-  reboot          Reboot reader
-  reset           Factory reset (DANGEROUS!)
-  inventory       Start continuous inventory (Ctrl+C to stop)
-  monitor         Listen for tag notifications
+Commands (GET):
+  info              Get reader information
+  network           Get IP/Mask/Gateway
+  mac               Get MAC address
+  time              Get system time
+  gpi               Read GPI input levels
+  relay             Get relay config
+  rs485             Get RS485 config
+  tagcache          Get tag cache status
+  tagtime           Get tag cache time
+  tags              Get stored tag records
+  ping              Get ping/gateway config
+  antenna <port>    Get antenna/RF port config (port 0-3)
+  antennaall        Get all 4 antenna configs
+  wiegand           Get Wiegand config
+  server            Get server/client mode config
+  com               Get COM/baud config
+
+Commands (SET):
+  settime <ts>      Set system time (unix timestamp, or 'now')
+  setpower <p> <dBm> Set RF port power (port 0-3, power 0-33)
+  setantenna <p> <power> <session> <target> <q>
+                    Set full antenna config (port 0-3)
+  setip <ip> <mask> <gw>  Set IP configuration
+  setmac <mac>      Set MAC address (XX:XX:XX:XX:XX:XX)
+  gpo <n> <0|1>     Set GPO output
+  dhcp <0|1>        Set DHCP mode (0=static, 1=DHCP)
+  setrelay <n> <ms> Set relay config (relay num, on-time ms)
+  setrs485 <a> <m>  Set RS485 (address, mode)
+  settagcache <0|1> Set tag cache on/off
+  settagtime <t>    Set tag cache time
+  setping <0|1> <ip>  Set ping config
+  setwiegand <en> <fmt> <bits>  Set Wiegand config
+
+Commands (ACTION):
+  inventory         Start continuous inventory (Ctrl+C to stop)
+  monitor           Listen for tag notifications
+  cleartags         Clear tag database
+  reboot            Reboot reader
+  reset             Factory reset (DANGEROUS!)
+  raw <hex>         Send raw hex packet
 
 Example:
   python3 cl7206c2_client.py 192.168.1.116 info
-  python3 cl7206c2_client.py 192.168.1.116 9090 inventory
+  python3 cl7206c2_client.py 192.168.1.116 antennaall
+  python3 cl7206c2_client.py 192.168.1.116 setpower 0 30
   python3 cl7206c2_client.py 192.168.1.116 settime now
+  python3 cl7206c2_client.py 192.168.1.116 inventory
 """
 
 import socket
@@ -428,9 +451,263 @@ class CL7206C2Client:
             if payload:
                 print(f"  Ping Switch: {'ON' if payload[0] else 'OFF'}")
                 if len(payload) >= 6 and payload[0] == 1:
-                    # IP is stored in little-endian in this response
                     ip = '.'.join(str(b) for b in payload[2:6])
                     print(f"  Ping Target: {ip}")
+        return result
+    
+    def get_antenna_config(self, port):
+        """CMD=0x01, SUB=0x0C: Get antenna/trigger config for RF port"""
+        result = self.send_command(0x01, 0x0C, bytes([port]))
+        if result:
+            cmd, sub, payload = result
+            print(f"\n=== Antenna Config — RF Port {port} (ANT{port*2+1}/ANT{port*2+2}) ===")
+            if len(payload) >= 12:
+                FREQ_REGIONS = {
+                    0x01: "FCC 902-928 MHz",
+                    0x02: "ETSI 865-868 MHz",
+                    0x04: "CN 920-925 MHz",
+                    0x10: "CN 840-845 + 920-925 MHz (dual)",
+                }
+                ant_idx   = payload[0]
+                power     = payload[3]
+                protocol  = payload[4]
+                freq      = payload[5]
+                session   = payload[7]
+                target    = payload[8]
+                q_value   = payload[9]
+                param_a   = payload[10]
+                param_b   = payload[11]
+                freq_str  = FREQ_REGIONS.get(freq, f"0x{freq:02X}")
+                proto_str = {0: "Single-target", 1: "6B", 2: "Gen2 dual-target"}.get(protocol, f"0x{protocol:02X}")
+                print(f"  Antenna index:  {ant_idx}")
+                print(f"  Power:          {power} dBm")
+                print(f"  Protocol:       {proto_str}")
+                print(f"  Frequency:      {freq_str}")
+                print(f"  Session:        S{session}")
+                print(f"  Target:         {'A' if target == 0 else 'B'}")
+                print(f"  Q value:        {q_value}")
+                print(f"  Param A/B:      {param_a} / {param_b}")
+            else:
+                print(f"  Raw: {payload.hex()}")
+        return result
+    
+    def get_all_antennas(self):
+        """Get config for all 4 RF ports"""
+        for port in range(4):
+            self.get_antenna_config(port)
+    
+    def set_antenna_power(self, port, power_dbm):
+        """Set power for an RF port via SET 0x0B
+        
+        Reads current config, modifies power, writes back.
+        """
+        # First read current config
+        result = self.send_command(0x01, 0x0C, bytes([port]))
+        if not result:
+            print("[!] Failed to read current antenna config")
+            return None
+        
+        cmd, sub, payload = result
+        if len(payload) < 12:
+            print(f"[!] Unexpected payload length: {len(payload)}")
+            return None
+        
+        # Modify power byte (offset 3)
+        config = bytearray(payload)
+        old_power = config[3]
+        config[3] = power_dbm & 0xFF
+        
+        # Write back via SET 0x0B with sub-param = port
+        # The firmware matches on data[port] field and the sub-param byte
+        print(f"\n=== Set Antenna Power — Port {port} ===")
+        print(f"  {old_power} dBm → {power_dbm} dBm")
+        
+        result = self.send_command(0x01, 0x0B, bytes(config))
+        if result:
+            cmd, sub, resp = result
+            status = resp[0] if resp else -1
+            print(f"  Status: {'OK' if status == 0 else f'Response: {resp.hex()}'}")
+        return result
+    
+    def set_antenna_config(self, port, power, session, target, q_value):
+        """Full antenna config via SET 0x0B"""
+        # Read current config first
+        result = self.send_command(0x01, 0x0C, bytes([port]))
+        if not result:
+            print("[!] Failed to read current antenna config")
+            return None
+        
+        cmd, sub, payload = result
+        config = bytearray(payload) if len(payload) >= 12 else bytearray(14)
+        
+        config[0] = port       # Antenna index
+        config[3] = power      # Power dBm
+        config[7] = session    # Session 0-3
+        config[8] = target     # Target 0=A, 1=B
+        config[9] = q_value    # Q value
+        
+        print(f"\n=== Set Antenna Config — Port {port} ===")
+        print(f"  Power:   {power} dBm")
+        print(f"  Session: S{session}")
+        print(f"  Target:  {'A' if target == 0 else 'B'}")
+        print(f"  Q:       {q_value}")
+        
+        result = self.send_command(0x01, 0x0B, bytes(config))
+        if result:
+            cmd, sub, resp = result
+            print(f"  Status: {resp.hex() if resp else 'no response'}")
+        return result
+    
+    def set_ip(self, ip_str, mask_str, gw_str):
+        """CMD=0x01, SUB=0x04: Set IP configuration"""
+        ip_bytes   = bytes(int(x) for x in ip_str.split('.'))
+        mask_bytes = bytes(int(x) for x in mask_str.split('.'))
+        gw_bytes   = bytes(int(x) for x in gw_str.split('.'))
+        
+        if len(ip_bytes) != 4 or len(mask_bytes) != 4 or len(gw_bytes) != 4:
+            print("[!] Invalid IP format")
+            return None
+        
+        data = ip_bytes + mask_bytes + gw_bytes
+        print(f"\n=== Set IP Configuration ===")
+        print(f"  IP:      {ip_str}")
+        print(f"  Mask:    {mask_str}")
+        print(f"  Gateway: {gw_str}")
+        
+        result = self.send_command(0x01, 0x04, data)
+        if result:
+            cmd, sub, resp = result
+            status = resp[0] if resp else -1
+            print(f"  Status: {'OK' if status == 0 else f'Error ({status})'}")
+            print(f"  ⚠ Reboot reader for changes to take effect!")
+        return result
+    
+    def set_mac(self, mac_str):
+        """CMD=0x01, SUB=0x13: Set MAC address"""
+        mac_bytes = bytes(int(x, 16) for x in mac_str.split(':'))
+        if len(mac_bytes) != 6:
+            print("[!] MAC must be XX:XX:XX:XX:XX:XX")
+            return None
+        
+        print(f"\n=== Set MAC Address ===")
+        print(f"  MAC: {mac_str}")
+        
+        result = self.send_command(0x01, 0x13, mac_bytes)
+        if result:
+            cmd, sub, resp = result
+            status = resp[0] if resp else -1
+            print(f"  Status: {'OK' if status == 0 else f'Error ({status})'}")
+        return result
+    
+    def get_wiegand(self):
+        """CMD=0x01, SUB=0x0E: Get Wiegand config"""
+        result = self.send_command(0x01, 0x0E)
+        if result:
+            cmd, sub, payload = result
+            print(f"\n=== Wiegand Config ===")
+            if len(payload) >= 3:
+                WG_TYPES = {0: "Off", 1: "Wiegand-26", 2: "Wiegand-34", 3: "Wiegand-66"}
+                print(f"  Enable: {'ON' if payload[0] else 'OFF'}")
+                print(f"  Format: {WG_TYPES.get(payload[1], payload[1])}")
+                print(f"  Bits:   {payload[2]}")
+            else:
+                print(f"  Raw: {payload.hex()}")
+        return result
+    
+    def set_wiegand(self, enable, fmt, bits):
+        """CMD=0x01, SUB=0x0D: Set Wiegand config"""
+        data = bytes([enable, fmt, bits])
+        print(f"\n=== Set Wiegand Config ===")
+        print(f"  Enable: {enable}, Format: {fmt}, Bits: {bits}")
+        result = self.send_command(0x01, 0x0D, data)
+        if result:
+            cmd, sub, resp = result
+            print(f"  Status: {resp.hex() if resp else 'no response'}")
+        return result
+    
+    def get_server_mode(self):
+        """CMD=0x01, SUB=0x08: Get server/client mode"""
+        result = self.send_command(0x01, 0x08)
+        if result:
+            cmd, sub, payload = result
+            print(f"\n=== Server/Client Mode ===")
+            if len(payload) >= 9:
+                port1 = (payload[0] << 8) | payload[1]
+                ip = '.'.join(str(b) for b in payload[2:6])
+                port2 = (payload[6] << 8) | payload[7]
+                mode = payload[8]
+                MODE_NAMES = {0: "TCP Server", 1: "TCP Client", 2: "UDP"}
+                print(f"  Local port:  {port1}")
+                print(f"  Server IP:   {ip}")
+                print(f"  Server port: {port2}")
+                print(f"  Mode:        {MODE_NAMES.get(mode, mode)}")
+            else:
+                print(f"  Raw: {payload.hex()}")
+        return result
+    
+    def get_com_config(self):
+        """CMD=0x01, SUB=0x03: Get COM/baud config"""
+        result = self.send_command(0x01, 0x03)
+        if result:
+            cmd, sub, payload = result
+            print(f"\n=== COM Config ===")
+            if payload:
+                BAUD_MAP = {0: "9600", 1: "19200", 2: "38400", 3: "57600", 4: "115200"}
+                print(f"  Baud rate: {BAUD_MAP.get(payload[0], f'unknown ({payload[0]})')}")
+            else:
+                print(f"  Raw: {payload.hex()}")
+        return result
+    
+    def set_relay(self, relay_num, on_time_ms):
+        """CMD=0x01, SUB=0x23: Set relay config"""
+        data = bytes([relay_num, (on_time_ms >> 8) & 0xFF, on_time_ms & 0xFF])
+        print(f"\n=== Set Relay Config ===")
+        print(f"  Relay: {relay_num}, On-time: {on_time_ms} ms")
+        result = self.send_command(0x01, 0x23, data)
+        if result:
+            cmd, sub, resp = result
+            print(f"  Status: {resp.hex() if resp else 'no response'}")
+        return result
+    
+    def set_rs485(self, addr, mode):
+        """CMD=0x01, SUB=0x15: Set RS485 config"""
+        data = bytes([addr, mode])
+        print(f"\n=== Set RS485 Config ===")
+        print(f"  Address: {addr}, Mode: {mode}")
+        result = self.send_command(0x01, 0x15, data)
+        if result:
+            cmd, sub, resp = result
+            print(f"  Status: {resp.hex() if resp else 'no response'}")
+        return result
+    
+    def set_tag_cache(self, enable):
+        """CMD=0x01, SUB=0x17: Set tag cache switch"""
+        result = self.send_command(0x01, 0x17, bytes([enable]))
+        if result:
+            print(f"\n=== Set Tag Cache ===")
+            print(f"  Cache: {'ON' if enable else 'OFF'}")
+        return result
+    
+    def set_tag_cache_time(self, cache_time):
+        """CMD=0x01, SUB=0x19: Set tag cache time"""
+        data = bytes([(cache_time >> 8) & 0xFF, cache_time & 0xFF])
+        result = self.send_command(0x01, 0x19, data)
+        if result:
+            print(f"\n=== Set Tag Cache Time ===")
+            print(f"  Time: {cache_time}")
+        return result
+    
+    def set_ping(self, enable, ip_str="0.0.0.0"):
+        """CMD=0x01, SUB=0x2D: Set ping config"""
+        ip_bytes = bytes(int(x) for x in ip_str.split('.'))
+        data = bytes([enable]) + ip_bytes
+        print(f"\n=== Set Ping Config ===")
+        print(f"  Enable: {enable}, IP: {ip_str}")
+        result = self.send_command(0x01, 0x2D, data)
+        if result:
+            cmd, sub, resp = result
+            print(f"  Status: {resp.hex() if resp else 'no response'}")
+        return result
         return result
     
     def set_dhcp(self, mode):
@@ -612,6 +889,82 @@ def main():
                 client.set_dhcp(int(args[0]))
             else:
                 print("Usage: dhcp <0|1>")
+        
+        # ─── NEW: Antenna commands ───
+        elif command == 'antenna':
+            if args:
+                client.get_antenna_config(int(args[0]))
+            else:
+                print("Usage: antenna <port 0-3>")
+        elif command == 'antennaall':
+            client.get_all_antennas()
+        elif command == 'setpower':
+            if len(args) >= 2:
+                client.set_antenna_power(int(args[0]), int(args[1]))
+            else:
+                print("Usage: setpower <port 0-3> <dBm 0-33>")
+        elif command == 'setantenna':
+            if len(args) >= 5:
+                client.set_antenna_config(int(args[0]), int(args[1]),
+                                          int(args[2]), int(args[3]), int(args[4]))
+            else:
+                print("Usage: setantenna <port> <power_dBm> <session 0-3> <target 0-1> <Q>")
+        
+        # ─── NEW: Network SET commands ───
+        elif command == 'setip':
+            if len(args) >= 3:
+                client.set_ip(args[0], args[1], args[2])
+            else:
+                print("Usage: setip <ip> <mask> <gateway>")
+        elif command == 'setmac':
+            if args:
+                client.set_mac(args[0])
+            else:
+                print("Usage: setmac XX:XX:XX:XX:XX:XX")
+        
+        # ─── NEW: Config GET commands ───
+        elif command == 'wiegand':
+            client.get_wiegand()
+        elif command == 'server':
+            client.get_server_mode()
+        elif command == 'com':
+            client.get_com_config()
+        
+        # ─── NEW: Config SET commands ───
+        elif command == 'setwiegand':
+            if len(args) >= 3:
+                client.set_wiegand(int(args[0]), int(args[1]), int(args[2]))
+            else:
+                print("Usage: setwiegand <enable 0-1> <format 0-3> <bits>")
+        elif command == 'setrelay':
+            if len(args) >= 2:
+                client.set_relay(int(args[0]), int(args[1]))
+            else:
+                print("Usage: setrelay <relay_num> <on_time_ms>")
+        elif command == 'setrs485':
+            if len(args) >= 2:
+                client.set_rs485(int(args[0]), int(args[1]))
+            else:
+                print("Usage: setrs485 <address> <mode>")
+        elif command == 'settagcache':
+            if args:
+                client.set_tag_cache(int(args[0]))
+            else:
+                print("Usage: settagcache <0|1>")
+        elif command == 'settagtime':
+            if args:
+                client.set_tag_cache_time(int(args[0]))
+            else:
+                print("Usage: settagtime <time>")
+        elif command == 'setping':
+            if len(args) >= 2:
+                client.set_ping(int(args[0]), args[1])
+            elif args:
+                client.set_ping(int(args[0]))
+            else:
+                print("Usage: setping <0|1> [ip]")
+        
+        # ─── Dangerous commands ───
         elif command == 'reboot':
             client.reboot()
         elif command == 'reset':
