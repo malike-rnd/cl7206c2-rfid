@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+*.bin
+*.elf
+config_pram
+tag_table
+CL7206C2

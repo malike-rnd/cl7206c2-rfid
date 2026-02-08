@@ -1,0 +1,1206 @@
+/lib/ld-linux.so.2
+libsqlite3.so.0
+sqlite3_bind_int
+sqlite3_bind_blob
+_DYNAMIC
+sqlite3_open
+sqlite3_finalize
+_init
+sqlite3_column_blob
+sqlite3_step
+sqlite3_column_int
+_fini
+sqlite3_prepare
+__data_start
+_Jv_RegisterClasses
+sqlite3_exec
+__gmon_start__
+libpthread.so.0
+recv
+connect
+pthread_create
+system
+lseek
+send
+accept
+write
+read
+sendto
+__errno_location
+fcntl
+close
+librt.so.1
+timer_create
+timer_settime
+libc.so.6
+strcpy
+ioctl
+if_indextoname
+stdout
+strerror
+inet_pton
+usleep
+getpid
+memcpy
+perror
+puts
+tcflush
+malloc
+isatty
+settimeofday
+socket
+select
+abort
+cfsetispeed
+fprintf
+strcat
+bind
+inet_addr
+setsockopt
+cfsetospeed
+strstr
+signal
+strncpy
+sync
+strcasecmp
+htonl
+memcmp
+listen
+inet_aton
+gettimeofday
+memset
+ntohs
+inet_ntoa
+tcgetattr
+syslog
+gethostbyname
+sprintf
+getsockopt
+htons
+atoi
+_IO_stdin_used
+__libc_start_main
+strlen
+tcsetattr
+free
+__fxstat
+_edata
+__bss_start
+__bss_start__
+_end
+__bss_end__
+__end__
+GLIBC_2.2
+GLIBC_2.1
+GLIBC_2.0
+Create timer thread error!
+Create triger_id thread error!
+init pc com err %d
+init 485 com err %d
+init usb com err %d
+init rf com err %d
+func %s  ip
+%d %d %d %d
+func %s line %d dhcp open
+write pc count %d
+write rf count %d
+write 485 count %d
+func %s line %d open usb disk fd %d
+open socket fd err %d 
+func %s line %d open socket fd ok %d 
+enter main app socket_fd %d
+select
+udhcpc &
+func %s line %d connect GET OPT ERR 
+func %s line %d connect ERR 
+func %s line %d connect SUCCESS time %d 
+func %s line %d connect time out 
+accept
+USB com rec data %d
+usb disk insert .............
+eth0
+func %s  line %d re connect fd %d time sec %d  usec %d *********************
+gateway fd %d
+echo "">gateway
+echo "on">ping_sw
+rm /ping_sw
+../gateway
+open  gateway  err
+gateway file success .......
+gateway file reset .......
+echo  >/gateway
+../ping_ret
+open  ping_fd  err
+ping_fd file success .......
+fail!
+get ping ret err %d 
+link detect down %d times
+ping gateway fail %d times
+ifconfig eth0 up
+/dev/ttyS0
+/dev/ttyS1
+/dev/ttyS2
+/dev/ttyS3
+/dev/ttyS4
+/dev/ttyS5
+/dev/ttyS6
+/dev/ttyGS0
+SetupSerial 1
+com set error
+set done!
+Can't Open Serial Port %s
+open %s  success .....
+fcntl failed!
+fcntl=%d
+standard input is not a terminal device
+isatty success!
+fd-open=%d
+open_port error
+set_opt error
+get uart flag  %x**************
+/dev/sda1
+Can't Open usb_disk_fd %d
+open usb_disk_fd %d  success .....
+socket
+fcntl F_GETFL
+fcntl F_SETFL
+fail to set SO_KEEPALIVE
+fail to set SO_KEEPIDLE
+fail to set SO_KEEPINTVL
+func %s line %d  local port %d
+bind
+listen
+func %s line %d ip %d %d %d %d
+func %s line %d ip %s port %d
+newc_fd %d 
+accept
+func %s mac
+%x %x %x %x %x %x
+socket error!
+ioctl
+ifconfig eth0 down
+set mac!
+set mac err!
+ioctl error!
+ifconfig eth0 up
+cpm: socket
+cpm: ioctl device %s
+ioctl SIOCSIFADDR error
+func %s line %d ******************
+ioctl SIOCSIFADDR
+route add default gw %s 
+ioctl SIOCSIFHWADDR error
+cpm: ioctl
+func %s line %d set ip ret %d
+eth0
+func %s  ip
+%d %d %d %d
+socket error! 
+socket error! %d line %d
+%02x-%02x-%02x-%02x-%02x-%02x
+socket creating error/n
+wrong group address!/n
+self ip address error!/n
+Bind error  ..../n
+bind ok ....
+route add -net 224.0.0.0 netmask 224.0.0.0 eth0
+230.1.1.116
+send addr %s port %d fd %d 
+func %s line %d setup brocast socket
+sendto error!
+^RFID_READER_INFORMATION:7206C2
+,DHCP_SW:
+,IP:
+,MASK:
+,GATEWAY:
+,MAC:
+,PORT:
+,HOST_SERVER_IP:
+,HOST_SERVER_PORT:
+,MODE:
+SERVER
+CLIENT
+,NET_STATE:
+ACTIVE
+INACTIVE
+socket 
+SO_REUSEADDR
+230.1.1.117
+setsockopt
+func %s line %d %d.............
+TERMINAL_MAC:
+func %s line %d
+DHCP_SW:
+MASK:
+GATEWAY:
+HOST_SERVER_IP:
+func %s line %d %s RET %d
+MAC:
+PORT:
+HOST_SERVER_PORT:
+MODE:
+func %s line %d ret %d
+kill -9 $(pidof udhcpc)
+SOCK READ: 
+Error in recieved packet
+*.*.*.*	
+0.0.0.0
+Socket Creation: 
+Write To Socket Failed...
+Read From Socket Failed...
+ifconfig eth0 
+enter func  %s
+com_recive errno = %d
+com_recive wait for next read
+com_recive Server closed the connection
+get time err
+rs485 com data but not correct addr %d local %d
+rs485 com data but len too short %d
+%s set gpio len too long %d
+%s set pin 1 state %x
+%s set pin 2 state %x
+%s set pin 3 state %x
+%s set pin 4 state %x
+CL7206C_20170602
+local cmd active fd %d  current fd %d
+relay %d close time %d
+reboot -f
+kill -9 $(pidof udhcpc)
+func %s line %d ret %d
+Set system datatime error!/n
+hwclock -w
+%d time out
+%d time out %d 
+%d time out old %d new %d len %d
+wrong crc real %x  wanted %x
+get rec_struct time out  %d
+get a wrong rec_struct old %d  new %d %d
+func %s line %d fd cannot write 0
+func %s line %d fd cannot write 1
+func %s line %d transfer fail reset socket
+func %s line %d fd %d write err wanted %d real %d
+func %s line %d  sec %d 
+func %s line %d 
+func %s line %d ret %d
+func %s line %d  fd err %d
+func %s line %d  FLAG %d  TCP FD %d s
+func %s line %d  set active fd %d
+func %s  line %d  
+/tmp/myfifo
+reader process alive
+../config_pram
+open  config_pram  err
+config file success .......
+config file reset .......
+open config file err:
+rm ../config_pram
+open  config_pram  err
+config file success .......
+config file reset .......
+timer_create
+timer_settime
+func %s line %d value %x
+timer_create
+timer_settime
+Create pthread error!
+/dev/wiegand
+func %s line %d open wiegand ok 
+func %s line %d get dma init flag %d 
+func %s line %d open wiegand fail 
+reboot -f
+wiegand debug get time err
+wiegand data type err %x
+#VxCL7206C2_STD_APP/CL7206C2
+func %s line %d 
+rm /CL7206B2
+rm /CL7206C2
+open  upgrade  err
+upgrade create func %s  line %d sum %x crc %x count %d addr %d.......
+wrong app sign
+enter func %s line %d
+/usbdisk/CL7206C2_APP.bin
+umount ../usbdisk
+open upgrade file success xx
+open upgrade file success check sum err
+open upgrade file fail
+timer_create
+timer_settime
+upgrade create func %s  line %d .......
+rm /white_list_db
+mv /CL7206C2 /white_list_db
+cp /bin/CL7206C2  /back_app
+rm /bin/CL7206C2
+chmod 777 /CL7206C2
+cp /CL7206C2  /bin
+cp /usbdisk/CL7206C2_APP.bin   /
+mv /CL7206C2_APP.bin /CL7206C2
+chmod 777 /bin/CL7206C2
+/white_list_db
+func %s line %d ret %d pack num %d
+func %s line %d ret %d
+func %s line %d ret %d read_len %d 
+CL7206B2
+open file fail
+func %s line %d sum is %x 
+open file fail
+size is %d crc is %x
+func %s sum is %x
+func %s crc is %x
+error getting socket: %s
+bind failed: %s
+tag_table
+creat tag data base err %d
+:memory:
+creat memory data base err %d
+attach 'tag_table' as new_db
+create table tag_data(tag_index integer primary key, package_len int, package_data blob, epc_len int, epc_code blob, pc int, ant_num int, 													   sub_ant_num int, tid_flag int, tid_len int, tid_code blob, 														time_seconds int, time_usec int);
+create table back_tag_data(tag_index integer primary key, package_len int, package_data blob, epc_len int, epc_code blob, pc int, ant_num int, 													   sub_ant_num int, tid_flag int, tid_len int, tid_code blob, 														time_seconds int, time_usec int);
+creat table err line %d  mode %d  ret %d
+insert into tag_data values (?, ?,           ?,          ?,       ?,        ?,   ?,   ?, ?,      ?,    ?,   ?, ?);
+insert into back_tag_data values(?, ?,          ?,          ?,       ?,        ?,   ?,  ?,   ?,      ?,    ?,   ?, ?);
+insert err prepare %d %d
+delete from back_tag_data where time_seconds
+delete from tag_data where time_seconds
+ <= 
+ and time_usec = 
+func %s line %d err %d
+delete  from back_tag_data;
+delete  from tag_data;
+select count(*)  from back_tag_data;
+select count(*)  from tag_data;
+delete from back_tag_data where tag_index = 
+delete from tag_data where tag_index = 
+func %s line %d
+enter default case 
+select * from tag_data;
+insert err prepare %d
+query err step %d
+insert into tag_data select * from back_tag_data where time_seconds <= 
+select max(tag_index) as maxid from back_tag_data;
+select max(tag_index) as maxid from tag_data;
+tag analise fail %d
+recive a tag answer delete a record  sec %d  usec %d
+select * from back_tag_data where hex(tid_code) = "
+select * from tag_data where hex(tid_code) = "
+select * from white_list where tid_code = "
+find tid err prepare %d line %d
+func %s line %d  ret %d, no row
+select * from back_tag_data where time_seconds <= 
+select * from tag_data where time_seconds <= 
+tag %s enter time %d ................
+UPDATE tag_data SET time_seconds = 
+UPDATE back_tag_data SET time_seconds = 
+, time_usec = 
+ WHERE hex(tid_code) = "
+func %s line %d  ret %d, err
+get buff data no index %d
+func %s line %d time out over  ..............
+get buff data complete index %d
+select min(tag_index) as minid from tag_data;
+delete from tag_data where tag_index in(select tag_index from tag_data limit 
+delete from back_tag_data where tag_index in(select tag_index from back_tag_data limit 
+delete from white_list where ID in(select ID from white_list limit 
+hello rf port
+hello 485 port
+hello pc port
+net_pram_init
+main
+client_mode_reconnect
+tcpserver_starup
+tcpclient_starup
+set_mac_address
+ifcontrol
+netapp_set_ip_pram
+netapp_set_mac_pram
+send_local_information
+setup_brocast_rec_socket
+check_terminal_mac
+get_dhcp_sw
+udp_get_ip_pram
+UDP_cmd_process
+recive_init
+Gpo_Data_Process
+protocol_cmd_hdl
+transfer_to_rf
+transfer_to_pc
+connect_manage
+connect_state_init
+connect_set_active_fd
+con_test
+power_on_detect
+gpio_init
+Upgrade_Ok
+Upgrade_Process
+usb_disk_upgrade
+upgrade_instead_file
+upgrade_instead_USB_file
+upgrade_get_white_list
+get_crc
+check_crc
+sql_delete_record
+sql_delete_all_record
+sql_delete_record_by_index
+tag_data_analise
+sql_write_real_table
+query_record_by_tid
+query_record_by_time
+update_record_time
+data_base_answer_machine
+GCC: (GNU) 4.0.0 (DENX ELDK 4.1 4.0.0)
+GCC: (GNU) 4.0.0 (DENX ELDK 4.1 4.0.0)
+GCC: (GNU) 4.0.0 (DENX ELDK 4.1 4.0.0)
+GCC: (GNU) 4.0.0 (DENX ELDK 4.1 4.0.0)
+GCC: (GNU) 4.0.0 (DENX ELDK 4.1 4.0.0)
+GCC: (GNU) 4.0.0 (DENX ELDK 4.1 4.0.0)
+GCC: (GNU) 4.0.0 (DENX ELDK 4.1 4.0.0)
+GCC: (GNU) 4.0.0 (DENX ELDK 4.1 4.0.0)
+GCC: (GNU) 4.0.0 (DENX ELDK 4.1 4.0.0)
+GCC: (GNU) 4.0.0 (DENX ELDK 4.1 4.0.0)
+GCC: (GNU) 4.0.0 (DENX ELDK 4.1 4.0.0)
+GCC: (GNU) 4.0.0 (DENX ELDK 4.1 4.0.0)
+GCC: (GNU) 4.0.0 (DENX ELDK 4.1 4.0.0)
+GCC: (GNU) 4.0.0 (DENX ELDK 4.1 4.0.0)
+GCC: (GNU) 4.0.0 (DENX ELDK 4.1 4.0.0)
+GCC: (GNU) 4.0.0 (DENX ELDK 4.1 4.0.0)
+GCC: (GNU) 4.0.0 (DENX ELDK 4.1 4.0.0)
+GCC: (GNU) 4.0.0 (DENX ELDK 4.1 4.0.0)
+GCC: (GNU) 4.0.0 (DENX ELDK 4.1 4.0.0)
+GCC: (GNU) 4.0.0 (DENX ELDK 4.1 4.0.0)
+GCC: (GNU) 4.0.0 (DENX ELDK 4.1 4.0.0)
+GCC: (GNU) 4.0.0 (DENX ELDK 4.1 4.0.0)
+GCC: (GNU) 4.0.0 (DENX ELDK 4.1 4.0.0)
+GCC: (GNU) 4.0.0 (DENX ELDK 4.1 4.0.0)
+/opt/eldk/build/arm-2007-01-21/work/usr/src/denx/BUILD/crosstool-0.35/build/gcc-4.0.0-glibc-2.3.5-eldk/arm-linux/build-libc/csu/crti.S
+/opt/eldk/build/arm-2007-01-21/work/usr/src/denx/BUILD/crosstool-0.35/build/gcc-4.0.0-glibc-2.3.5-eldk/arm-linux/glibc-2.3.5/csu
+GNU AS 2.16.1
+/opt/eldk/build/arm-2007-01-21/work/usr/src/denx/BUILD/crosstool-0.35/build/gcc-4.0.0-glibc-2.3.5-eldk/arm-linux/gcc-4.0.0/gcc/config/arm/lib1funcs.asm
+/opt/eldk/build/arm-2007-01-21/work/usr/src/denx/BUILD/crosstool-0.35/build/gcc-4.0.0-glibc-2.3.5-eldk/arm-linux/build-gcc/gcc
+GNU AS 2.16.1
+/opt/eldk/build/arm-2007-01-21/work/usr/src/denx/BUILD/crosstool-0.35/build/gcc-4.0.0-glibc-2.3.5-eldk/arm-linux/gcc-4.0.0/gcc/config/arm/lib1funcs.asm
+/opt/eldk/build/arm-2007-01-21/work/usr/src/denx/BUILD/crosstool-0.35/build/gcc-4.0.0-glibc-2.3.5-eldk/arm-linux/build-gcc/gcc
+GNU AS 2.16.1
+/opt/eldk/build/arm-2007-01-21/work/usr/src/denx/BUILD/crosstool-0.35/build/gcc-4.0.0-glibc-2.3.5-eldk/arm-linux/build-libc/csu/crtn.S
+/opt/eldk/build/arm-2007-01-21/work/usr/src/denx/BUILD/crosstool-0.35/build/gcc-4.0.0-glibc-2.3.5-eldk/arm-linux/glibc-2.3.5/csu
+GNU AS 2.16.1
+/opt/eldk/build/arm-2007-01-21/work/usr/src/denx/BUILD/crosstool-0.35/build/gcc-4.0.0-glibc-2.3.5-eldk/arm-linux/build-libc/csu
+crti.S
+,-,,,,,,,
+/opt/eldk/build/arm-2007-01-21/work/usr/src/denx/BUILD/crosstool-0.35/build/gcc-4.0.0-glibc-2.3.5-eldk/arm-linux/gcc-4.0.0/gcc/config/arm
+lib1funcs.asm
+,,,,,,
+/opt/eldk/build/arm-2007-01-21/work/usr/src/denx/BUILD/crosstool-0.35/build/gcc-4.0.0-glibc-2.3.5-eldk/arm-linux/gcc-4.0.0/gcc/config/arm
+lib1funcs.asm
+/opt/eldk/build/arm-2007-01-21/work/usr/src/denx/BUILD/crosstool-0.35/build/gcc-4.0.0-glibc-2.3.5-eldk/arm-linux/build-libc/csu
+crtn.S
+.symtab
+.strtab
+.shstrtab
+.interp
+.note.ABI-tag
+.hash
+.dynsym
+.dynstr
+.gnu.version
+.gnu.version_r
+.rel.dyn
+.rel.plt
+.init
+.text
+.fini
+.rodata
+.eh_frame
+.ctors
+.dtors
+.jcr
+.dynamic
+.got
+.data
+.bss
+.comment
+.debug_aranges
+.debug_info
+.debug_abbrev
+.debug_line
+initfini.c
+/opt/eldk/build/arm-2007-01-21/work/usr/src/denx/BUILD/crosstool-0.35/build/gcc-4.0.0-glibc-2.3.5-eldk/arm-linux/build-libc/csu/crti.S
+call_gmon_start
+abi-note.S
+init.c
+crtstuff.c
+__CTOR_LIST__
+__DTOR_LIST__
+__JCR_LIST__
+completed.4640
+p.4639
+__do_global_dtors_aux
+call___do_global_dtors_aux
+frame_dummy
+call_frame_dummy
+__CTOR_END__
+__DTOR_END__
+__FRAME_END__
+__JCR_END__
+__do_global_ctors_aux
+call___do_global_ctors_aux
+/opt/eldk/build/arm-2007-01-21/work/usr/src/denx/BUILD/crosstool-0.35/build/gcc-4.0.0-glibc-2.3.5-eldk/arm-linux/build-libc/csu/crtn.S
+main.c
+rf_com_fd
+pc_com_fd
+reserv_com_fd
+rs485_com_fd
+usb_com_fd
+socket_fd
+tcp_connect_fd
+tcp_connect_back_fd
+usb_disk_fd
+multicast_fd
+gateway_fd
+multicast_rec_fd
+fifo_fd
+fd_array
+g_local_485_addr
+client_mode_connected_flag
+server_client_mode
+client_mode_close
+dhcp_flag
+rf_data
+rs485_data
+pc_data
+uart_com_init
+__func__.3629
+C.14.3635
+uart_com_debug
+__func__.3698
+power_on_timer
+off_count.4165
+rf_baud_mode.4378
+__func__.4419
+ping_fd.4633
+ping_res_fd.4668
+mor_state.4666
+rst_time.4665
+link_down_flag.4664
+ping_count.4663
+off_count.4662
+uart.c
+set_opt
+open_port
+uart_init
+netapp.c
+__func__.4460
+__func__.4489
+C.1.4492
+__func__.4568
+__func__.4629
+__func__.4897
+__func__.4908
+add.5117
+C.43.5118
+send_peeraddr
+__func__.5174
+C.49.5183
+C.48.5182
+C.47.5181
+C.46.5180
+C.45.5179
+__func__.5318
+__func__.5353
+C.58.5359
+C.57.5358
+__func__.5406
+C.72.5411
+__func__.5462
+C.84.5464
+C.83.5463
+C.102.5551
+C.101.5550
+C.121.5621
+C.137.5698
+__func__.5742
+C.149.5750
+C.152.5806
+C.154.5833
+C.153.5832
+C.159.5884
+C.158.5883
+C.204.6188
+C.221.6271
+recive.c
+rec_struct_init
+__func__.1766
+serial_com_recive
+com_recive
+timer.c
+protocol.c
+CRCtable
+__func__.3231
+re_buff
+old_485_addr
+reader_info
+reader_name
+__func__.3667
+test_flag.3609
+i.4589
+temp_len.4584
+transfer.c
+temp_transfer_buff
+Add_Rs485_Addr
+__func__.2353
+__func__.2415
+fail_count.2398
+connect_man.c
+connect_serial_num
+connect_ack_serial_num
+connect_active_fd
+__func__.2814
+flag.2811
+connect_manage_timer
+connect_struct
+com_alive_timer
+send_connect_ensure_cmd
+__func__.2915
+__func__.3019
+__func__.3033
+write_fifo_timer
+connect_man_timer
+configration.c
+pram_p_array
+def_config_struct
+config_struct
+C.6.3022
+C.5.3021
+triger.c
+level_event_flag
+envent_array
+stop_triger_cmd
+triger_state1
+triger_state2
+triger_state3
+triger_state4
+input_array
+triger_array
+C.0.3188
+C.1.3311
+set_level_event_timer
+test_timer
+triger_stop_timer
+level_event_timer
+flag.3490
+usb_upgrade_timer
+gpio.c
+gpio_fd
+interrupt_handler
+signal_init
+__func__.3167
+relay_on_timer
+thread1
+thread_init
+__func__.3223
+delay
+led_timer.3436
+init_flag.3435
+flag.3434
+wiegand.c
+wiegand_data
+wiegand_count
+wiegand_inter
+C.11.2207
+C.12.2267
+upgrade.c
+__func__.2747
+up_buff
+__func__.2771
+flash_write_addr.2769
+upgrade_pack_index.2768
+C.0.2776
+upgrade_instead_file
+upgrade_check_app_sign
+__func__.2892
+C.16.2897
+upgrade_instead_USB_file
+__func__.2975
+__func__.2983
+__func__.2999
+total_packs.2995
+count.2994
+old_pack_num.2990
+C.23.3001
+crc32.c
+firstPass
+calc_crctable
+crc32_table
+__func__.2729
+C.2.2733
+C.7.2771
+__func__.2800
+C.8.2801
+usb_mornitor.c
+net_link.c
+data_base.c
+__func__.3824
+__func__.3860
+__func__.3907
+__func__.3953
+C.27.3958
+__func__.4290
+index.4320
+__func__.4392
+__func__.4451
+C.64.4540
+__func__.4659
+__func__.4808
+trans_time.4803
+currentv.4802
+time_out.4801
+answer_state.4799
+/opt/eldk/build/arm-2007-01-21/work/usr/src/denx/BUILD/crosstool-0.35/build/gcc-4.0.0-glibc-2.3.5-eldk/arm-linux/gcc-4.0.0/gcc/config/arm/lib1funcs.asm
+data_base_white_list_check
+check_terminal_mac
+GetSysNetBySocket
+triger_level_event_genarate
+reserv_rec_struct
+link_timer
+get_gateway
+usleep@@GLIBC_2.0
+start_wiegand_thread
+server_sockaddr
+cpu_get_lltimer
+sqlite3_bind_int
+reserv_com_init
+gpio_get_input_4_level
+triger_delay_process
+tcp_back_rec_struct
+eth_monitor_time
+Rs485_data_process
+dhcp_pram
+connect_man_init
+g_timeout
+delay_100us
+Empty
+usb_upgrade_timer_init
+rs485_com_init
+fast_crc32
+Wiegand_Test
+GetSysMacBySocket
+gpio_wiegand_0_clear
+protocol_data_process
+rf_baud_switch
+OutQueue
+config_pram_init
+sqlite3_bind_blob
+get_client_mode_connect_flag
+relay_timer_start
+config_get_tag_cach_sw
+com_alive_num_reset
+GetSysMacBySocket_
+client_sockaddr
+update_record_time
+send_local_information
+getpid@@GLIBC_2.0
+_DYNAMIC
+triger_pra3_pram
+gpio_led_ctrl
+build_set_pack
+Check_Triger_Mode
+net_app_recovery_ip
+Triger_Manage
+_bss_end__
+tcpserver_starup
+data_base_clear_data
+triger_id
+active_fd_p
+settimeofday@@GLIBC_2.0
+com_is_serial
+Notification_Pc
+tcp_back_recive
+connect_set_active_fd
+temp_buff
+write@@GLIBC_2.0
+gpio_relay_4_crtl
+sqlite3_open
+rs485_COM_Set_Opt
+get_active_fd_p
+Triger_State_Machine
+con_test
+CONFIG_Get_WieGand_Switch
+set_connect_timer
+ifcontrol
+write_fd
+readNlSock
+close@@GLIBC_2.0
+triger_stop
+gpio_relay_3_crtl
+usb_rec_struct
+inet_pton@@GLIBC_2.0
+get_connect_status
+perror@@GLIBC_2.0
+Wiegand_Output_0
+Triger_Timer_Init
+fprintf@@GLIBC_2.0
+get_dhcp_sw
+connect_manage_time_out
+signal@@GLIBC_2.0
+up_fd
+gpio_get_input_3_level
+Delay_Event_Generate
+reading_flag
+gpio_triger3
+connect_manage
+pthread_create@@GLIBC_2.1
+config_reset
+sync_flag
+reset_client_mode_connect_flag
+Upgrade_Ok
+sql_delete_record_by_index
+get_status_send_package
+start_triger_thread
+cfsetospeed@@GLIBC_2.0
+file_gateway_reset
+tag_data_struct
+WieGand_Get_TID_Data_Pos
+us_delay
+fifo_init
+Wiegand_Send_Store_Data
+select@@GLIBC_2.0
+rs485_rec_struct
+htonl@@GLIBC_2.0
+set_baud4
+power_on_ser_cli_mode
+set_mac_address
+Get_Triger_Never_Stop_Send_Ntf
+config_get_local_ip_pram
+config_get_pc_com_mode
+strerror@@GLIBC_2.0
+WieGand_Data_Save
+__bss_start__
+config_get_local_mac_pram
+__dso_handle
+setup_multicast
+connect_set_rf_baud
+select_timer
+WieGand_Get_EPC_Data_Pos
+data_base_answer_machine
+__libc_csu_fini
+Server_Client_Pra_Process
+tcsetattr@@GLIBC_2.0
+serial_connect_ensure
+triger_pram
+connect_ensure_cmd
+get_array_str
+multicast_timer
+config_get_ser_cli_p
+check_crc
+config_get_ser_port
+CRC16_CalateByte
+netapp_set_mac_pram
+sqlite3_finalize
+ping_addr_check
+__errno_location@@GLIBC_2.0
+PC_COM_Set_Opt
+tag_cach_time_pram
+origine_local_ip
+getmsg_id
+relay_on_thread
+upgrade_get_white_list
+accept@@GLIBC_2.0
+GetSysBrstBySocket
+system@@GLIBC_2.0
+tcpclient_starup
+config_get_triger_pram
+gpio_phy_reset
+gpio_wiegand_1_set
+inet_ntoa@@GLIBC_2.0
+RESERV_COM_Init
+get_white_list_fd
+query_record_by_tid
+puts@@GLIBC_2.0
+_init
+timer_settime@@GLIBC_2.2
+transfer_to_pc
+save_config
+listen@@GLIBC_2.0
+usb_disk_open
+GetSysMaskBySocket
+malloc@@GLIBC_2.0
+check_gateway
+save_net_mac
+reset_socket
+Send_Triger_start_Cmd
+Gpo_Data_Process
+link_detect
+set_relay_timer
+gpio_triger1
+gpio_rf_board_reset
+get_pc_com_fd
+gpio_wiegand_1_clear
+sendto@@GLIBC_2.0
+ping_addr_pram
+ser_cli_pram
+triger_pra1_pram
+Wiegand_Output_Reset
+Get_Triger_Start_Mode
+config_get_local_ip
+fstat
+syslog@@GLIBC_2.0
+Wiegand_Init
+getsockopt@@GLIBC_2.0
+Triger_Get_Min_Len
+Notification_Pc_Start
+stdout@@GLIBC_2.0
+__umodsi3
+netapp_set_ip_pram
+config_get_485_addr
+abort@@GLIBC_2.0
+rf_rec_struct
+sql_creat_table
+update_reconnect_timer
+set_time_out
+link_status_mornitor
+sqlite3_column_blob
+get_tag_count_callback
+GetSysIpBySocket
+update_led_timer
+get_local_485_addr
+gpio_wiegand_0_set
+sql_delete_all_record
+upgrade_temp_dir
+RF_COM_Init
+file_gateway_init
+if_indextoname@@GLIBC_2.1
+setsockopt@@GLIBC_2.0
+WieGand_Get_6B_TID_Data_Pos
+usb_com_recive
+led_timer
+ip_pra_check
+inet_aton@@GLIBC_2.0
+TAG_line
+dhcp_time_reset
+get_netlink_status
+Upgrade_Process
+triger_pra2_pram
+config_get_relay_on_num_pra
+__bss_end__
+power_on_detect
+printRoute
+Get_Triger_Stop_Delay
+dhcp_time
+time@@GLIBC_2.0
+sqlite3_step
+_start
+gpio_rs485_crtl
+USB_COM_Init
+gpio_get_input_level
+ntohs@@GLIBC_2.0
+send_connect_timer
+connect_get_active_fd
+app_sign
+tag_data_analise
+setup_monitor_fd_sets
+__fxstat@@GLIBC_2.0
+usb_disk_upgrade
+strstr@@GLIBC_2.0
+phy_reset
+strlen@@GLIBC_2.0
+sleep@@GLIBC_2.0
+WieGand_Send
+ip_pram
+gpio_triger4
+config_get_dhcp_sw
+gpio_get_input_1_level
+connect_status
+reserv_com_recive
+Fill_Notif_Cmd
+Wiegand_Get_Pra
+uart_is_485_com
+RS485_COM_Init
+up_time
+get_mode
+asc_to_hex
+heart_beat_manage
+Send_Triger_Stop_Cmd
+cpu_diff_tick
+tag_cach_sw_pram
+get_host_ip
+udp_get_mac
+tcp_socket_setup
+get_max_tag_index_callback
+pc_com_init
+CONFIG_Get_WieGand_Pra
+config_get_local_port
+get_network_pram
+config_get_485_com_mode
+udp_get_port
+data_base_record_num_check
+Full
+Level_Event_Generate
+ms_delay
+add_crc
+__libc_csu_init
+file_get_gateway
+inet_addr@@GLIBC_2.0
+EnQueue
+rf_test
+connect_state_init
+connect_store_data
+memcmp@@GLIBC_2.0
+config_get_gateway
+com_keep_alive
+GetHead
+__bss_start
+main
+get_reading_flag
+data_base_store_record
+update_alive_timer
+__div0
+data_base_machine
+triger_pra4_pram
+tag_data_status_check
+__libc_start_main@@GLIBC_2.0
+data_base_delete_record
+uart_is_pc_com
+uart_pram
+recive_init
+transfer_to_rf
+protocol_cmd_hdl
+__end__
+new_db
+rf_com_recive
+config_get_relay_on_time_pra
+Get_Triger_Stop_Mode
+gpio_reset_config
+strcat@@GLIBC_2.0
+fdsr
+fifo_write
+setup_brocast_rec_socket
+triger_init
+sqlite3_column_int
+data_start
+get_power_on_sec
+printf@@GLIBC_2.0
+pc_rec_struct
+save_net_pram
+net_pram_init
+usb_com_init
+bind@@GLIBC_2.0
+data_base_init
+_fini
+lseek@@GLIBC_2.0
+fcntl@@GLIBC_2.0
+save_dhcp_sw
+memcpy@@GLIBC_2.0
+data_base_delete_record_index
+query_record_by_time
+Get_WieGand_Data_Check_Bit
+gpio_relay_1_crtl
+config_get_ser_ip
+config_get_ping_sw
+config_get_tag_cach_time_pra
+tcp_recive
+mac_pram
+udp_get_network_pram
+setup_brocast_socket
+gpio_relay_on_ctl
+Triger_Event_Update
+gpio_phy_ctl
+cpu_diff_us
+rf_baud_pram
+gettimeofday@@GLIBC_2.0
+Get_Triger_Cmd_Len
+get_rf_com_fd
+trans_fail_time
+tcp_rec_struct
+set_usb_upgrade_timer
+open@@GLIBC_2.0
+gethostbyname@@GLIBC_2.0
+wiegand_pram
+sqlite3_prepare
+strcasecmp@@GLIBC_2.0
+tcflush@@GLIBC_2.0
+get_package
+PC_COM_Init
+Notification_Pc_Stop
+atoi@@GLIBC_2.0
+Wiegand_Output_1
+udp_get_working_mode
+rs485_com_recive
+CRC16_CalculateBuf
+send_leave_notify
+_edata
+cfsetispeed@@GLIBC_2.0
+UDP_cmd_process
+gpio_beep_crtl
+_GLOBAL_OFFSET_TABLE_
+free@@GLIBC_2.0
+_end
+send@@GLIBC_2.0
+ioctl@@GLIBC_2.0
+htons@@GLIBC_2.0
+config_set_pra
+uart_is_usb_com
+timer_create@@GLIBC_2.2
+isatty@@GLIBC_2.0
+sql_insert
+memset@@GLIBC_2.0
+pc_com_recive
+connect@@GLIBC_2.0
+gpio_relay_off_ctl
+gpio_get_input_2_level
+config_get_ping_addr
+get_total_record_callback
+sql_write_real_table
+set_select_time_out
+get_rs485_com_fd
+strncpy@@GLIBC_2.0
+rs485_pram
+gpio_triger2
+get_host_port
+connect_timer
+relay_thread_init
+RESERV_COM_Set_Opt
+rf_COM_Set_Opt
+get_baudrate_modes
+get_old_485_addr
+save_net_mode
+__fstat
+get_crc
+init_hotplug_sock
+get_socket_fd
+_IO_stdin_used
+parseRoutes
+answer_buff_complete
+uart_is_reserve_com
+gpio_relay_2_crtl
+recv@@GLIBC_2.0
+uart_is_rf_com
+sprintf@@GLIBC_2.0
+config_get_pra
+config_get_ser_cli_mode
+udp_get_ip_pram
+wiegand_param
+__data_start
+gpio_init
+socket@@GLIBC_2.0
+sql_delete_record
+_Jv_RegisterClasses
+answer_buff_no
+tag_data_check
+if_com_alive
+tcpconnect_poll
+get_ping_result
+com_is_tcp
+tcgetattr@@GLIBC_2.0
+read@@GLIBC_2.0
+set_baud2
+client_mode_reconnect
+reset_time_out
+connect_notify_ack_num
+tmp_sockaddr
+net_get_gateway
+answer_buff_yes
+sqlite3_exec
+relay_on_time_pram
+sync@@GLIBC_2.0
+__gmon_start__
+InitQueue
+strcpy@@GLIBC_2.0
+CL7206C2_STD_APPW2
