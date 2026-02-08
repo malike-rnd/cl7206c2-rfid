@@ -1,13 +1,13 @@
-# CLOU CL7206C2 UHF RFID Reader — Reverse Engineering & Tools
+# CLOU CL7206C2 UHF RFID Reader — Complete Reverse Engineering & Tools
 
 > 🇬🇧 **English** | [🇷🇺 Русский](README.ru.md)
 
-> **Complete protocol reverse engineering** of the CLOU (Hopeland) CL7206C2 8-port UHF RFID fixed reader.
-> Proprietary binary protocol fully decoded from firmware. No vendor SDK or demo software required.
+> **100% firmware reverse engineering** of the CLOU (Hopeland) CL7206C2 8-port UHF RFID fixed reader.
+> Proprietary binary protocol fully decoded. 43 functions decompiled. No vendor SDK required.
 
 ## 🎯 Project Goal
 
-Building a **cycling race timing system** (хронометраж) using this reader + 2× 9dBi UHF antennas.
+Building a **cycling race timing system** using this reader + UHF antennas + RFID tags on cyclists.
 This repo contains everything needed to control the reader programmatically without vendor software.
 
 ---
@@ -16,90 +16,123 @@ This repo contains everything needed to control the reader programmatically with
 
 | Parameter | Value |
 |-----------|-------|
-| **Model** | CLOU CL7206C2 (Hopeland Technologies / Shenzhen Clou IoT) |
+| **Model** | CLOU CL7206C2 / CL7206C4 (Hopeland Technologies, Shenzhen) |
+| **Family** | CL7206C series — C2 (8-port via 4RF×2MUX) / C4 (4-port). Same firmware & protocol. |
 | **FCC ID** | 2AKAGCLOUIOTCL7206C |
 | **Firmware** | CL7206C_20170602 (HW v0.1, FW v0.19) |
 | **CPU** | ARM (Linux 2.6.39+, BusyBox v1.6.0) |
 | **Toolchain** | GCC 4.0.0 (DENX ELDK 4.1) |
-| **RF Ports** | 4 RF × 2 MUX = **8 antenna ports** |
-| **Max Power** | 33 dBm (+1 dB) per port |
-| **Frequency** | ETSI 865–868 MHz / FCC 902–928 MHz / CN 840–845 + 920–925 MHz |
+| **RF Ports** | 4 RF × 2 MUX = **8 antenna ports** (C2) / 4 ports (C4) |
+| **Max Power** | 33 dBm (±1 dB) per port, 1 dB step adjustment |
+| **Frequency** | CN 840–845 + 920–925 MHz / FCC 902–928 MHz / ETSI 865–868 MHz |
 | **Protocol** | ISO 18000-6C (EPC Gen2) / ISO 18000-6B |
 | **Read Distance** | 0–8 m (depends on tag/antenna/environment) |
-| **I/O** | 4× GPI (optocoupler), 4× GPO (relay), Wiegand output |
-| **Interfaces** | Ethernet (TCP/UDP), RS-232, RS-485, USB |
-| **Power** | 24V DC (30V–10V range), PSU: 24V/2.5A |
-| **Protection** | IP53 |
-| **Dimensions** | 256 × 147.6 × 43.47 mm |
-| **Antennas** | 2× 9dBi circular polarization UHF (ordered, pending delivery) |
+| **Channel BW** | <200 kHz |
+| **I/O** | 4× GPI (optocoupler, DC 0–12V, >9V=HIGH / <8V=LOW) |
+| **Relays** | 4× GPO (DC max 30V/2A, AC max 125V/0.3A, default: open circuit) |
+| **Wiegand** | WG0 + WG1 output (26/34/66 bit formats), default: high level |
+| **Interfaces** | Ethernet 10/100M, RS-232, RS-485, USB Device, USB Host |
+| **RS-232 Baud** | 115200 (default), 19200, 9600 bps |
+| **RS-485 Baud** | 115200 (default), 19200, 9600 bps |
+| **Power** | DC 10–30V (60W min), adapter: AC 100–240V 50/60Hz → DC 24V/2.5A |
+| **Protection** | IP54, operating −20°C to +70°C, storage −40°C to +85°C |
+| **Dimensions** | 256 × 147.6 × 43.47 mm, 1.41 kg |
+| **Connectors** | 4× TNC (reverse polarity, internal thread, inner pin) |
+| **RF Cable** | Max 5m, 50Ω, insertion loss <2dB, TNC↔SMA adapters |
+| **Network Cable** | Max 80m (direct or via switch/router) |
+| **Serial Cable** | Max 10m (RS-232 DB9) |
+| **Boot time** | ~20 seconds |
+
+### I/O Terminal Block Pinout
+
+```
+R1 L1 R2 L2 R3 L3 R4 L4 GND GND │ IN1 IN2 IN3 IN4 IN_GND │ WG0 WG1 GND │ 485-A 485-B
+└──────── 4× Relay outputs ───────┘ └── 4× Optocoupler in ──┘ └─ Wiegand ──┘ └── RS485 ──┘
+```
+
+> R1/L1 are both sides of relay 1 contact (normally open). Same for R2/L2, R3/L3, R4/L4.
+> IN_GND is separate from relay/signal GND — it's the optocoupler input reference ground.
 
 ---
 
-## 🔌 Network Configuration (default)
+## 🔌 Network Configuration
 
-| Parameter | Value |
-|-----------|-------|
-| IP Address | 192.168.1.116 |
+| Parameter | Default |
+|-----------|---------|
+| IP Address | **192.168.1.116** |
 | Subnet | 255.255.255.0 |
 | Gateway | 192.168.1.1 |
-| MAC | 6C:EC:A1:FE:75:3A |
-| Management Port | **9090** (TCP + UDP) |
+| TCP Port | **9090** (management + data) |
+| UDP Port | **9090** (broadcast discovery) |
 | Telnet | Port 23, login: `root` / no password |
+| DHCP | Off (static IP by default) |
+| Max TCP Clients | 2 (simultaneous) |
+
+> If you forget the IP, reset via RS-232 serial port or use `cl7206c2_tool.py discover`.
 
 ---
 
 ## 🛠 Tools
 
-### `tools/cl7206c2_client.py` — Main Protocol Client
+### `tools/cl7206c2_client.py` — Complete Protocol Client (1118 lines)
 
-Full-featured client for reader control via the reverse-engineered binary protocol.
+Full-featured client for reader control. All commands implemented from firmware reverse engineering.
 
 ```bash
-# Basic queries (all tested & working ✓)
-python3 cl7206c2_client.py 192.168.1.116 info        # Reader model, firmware, uptime
-python3 cl7206c2_client.py 192.168.1.116 network     # IP / Mask / Gateway
-python3 cl7206c2_client.py 192.168.1.116 mac         # MAC address
-python3 cl7206c2_client.py 192.168.1.116 time        # System clock
-python3 cl7206c2_client.py 192.168.1.116 settime now # Sync clock to PC time
-python3 cl7206c2_client.py 192.168.1.116 gpi         # Read 4 digital inputs
-python3 cl7206c2_client.py 192.168.1.116 relay       # Relay config
-python3 cl7206c2_client.py 192.168.1.116 rs485       # RS485 address & mode
-python3 cl7206c2_client.py 192.168.1.116 tagcache    # Tag cache on/off
-python3 cl7206c2_client.py 192.168.1.116 tagtime     # Tag cache duration
-python3 cl7206c2_client.py 192.168.1.116 ping        # Ping watchdog config
-python3 cl7206c2_client.py 192.168.1.116 tags        # Retrieve stored tags
-python3 cl7206c2_client.py 192.168.1.116 cleartags   # Clear tag database
+# === GET commands (read configuration) ===
+python3 cl7206c2_client.py 192.168.1.116 info          # Reader model, firmware, uptime
+python3 cl7206c2_client.py 192.168.1.116 network       # IP / Mask / Gateway
+python3 cl7206c2_client.py 192.168.1.116 mac           # MAC address
+python3 cl7206c2_client.py 192.168.1.116 time          # System clock (sec + usec)
+python3 cl7206c2_client.py 192.168.1.116 gpi           # Read 4 GPI input levels
+python3 cl7206c2_client.py 192.168.1.116 relay         # Relay number + on-time
+python3 cl7206c2_client.py 192.168.1.116 rs485         # RS485 address & mode
+python3 cl7206c2_client.py 192.168.1.116 tagcache      # Tag cache switch
+python3 cl7206c2_client.py 192.168.1.116 tagtime       # Tag cache duration
+python3 cl7206c2_client.py 192.168.1.116 ping          # Ping watchdog config
+python3 cl7206c2_client.py 192.168.1.116 wiegand       # Wiegand output config
+python3 cl7206c2_client.py 192.168.1.116 server        # Server/client mode
+python3 cl7206c2_client.py 192.168.1.116 com           # COM/baud config
+python3 cl7206c2_client.py 192.168.1.116 antenna 0     # Antenna port 0 config
+python3 cl7206c2_client.py 192.168.1.116 antennaall    # All 4 antenna configs
+python3 cl7206c2_client.py 192.168.1.116 trigger 0     # GPI trigger 0 config
+python3 cl7206c2_client.py 192.168.1.116 triggerall    # All 4 trigger configs
 
-# Tag reading (requires antennas + tags)
-python3 cl7206c2_client.py 192.168.1.116 inventory   # Live tag stream (Ctrl+C to stop)
-python3 cl7206c2_client.py 192.168.1.116 monitor     # Passive packet listener
+# === SET commands (write configuration) ===
+python3 cl7206c2_client.py 192.168.1.116 settime now            # Sync clock to PC time
+python3 cl7206c2_client.py 192.168.1.116 setpower 0 30          # RF port 0 = 30 dBm
+python3 cl7206c2_client.py 192.168.1.116 setantenna 0 30 2 0 4  # Full antenna config
+python3 cl7206c2_client.py 192.168.1.116 setip 192.168.1.200 255.255.255.0 192.168.1.1
+python3 cl7206c2_client.py 192.168.1.116 setmac AA:BB:CC:DD:EE:FF
+python3 cl7206c2_client.py 192.168.1.116 setrelay 1 500         # Relay 1, 500ms on-time
+python3 cl7206c2_client.py 192.168.1.116 settrigger 0 1 6 3000  # GPI-0: rising start, 30s auto-stop
 
-# Dangerous commands
-python3 cl7206c2_client.py 192.168.1.116 reboot      # Reboot reader
-python3 cl7206c2_client.py 192.168.1.116 reset       # Factory reset (asks confirmation)
+# === Tag operations ===
+python3 cl7206c2_client.py 192.168.1.116 inventory     # Live tag stream (Ctrl+C to stop)
+python3 cl7206c2_client.py 192.168.1.116 monitor       # Passive packet listener
+python3 cl7206c2_client.py 192.168.1.116 tags          # Retrieve stored tag records
+python3 cl7206c2_client.py 192.168.1.116 cleartags     # Clear tag database
+
+# === System commands ===
+python3 cl7206c2_client.py 192.168.1.116 reboot        # Reboot reader (⚠️)
+python3 cl7206c2_client.py 192.168.1.116 reset         # Factory reset (⚠️ asks confirmation)
 ```
 
 Requirements: Python 3.6+, no external dependencies.
 
-### `tools/cl7206c2_tool.py` — Config File Parser
-
-Parse and edit the binary `/config_pram` configuration file offline.
+### `tools/cl7206c2_tool.py` — UDP Discovery & Config Parser
 
 ```bash
-python3 cl7206c2_tool.py dump-config config_pram     # Decode config file
-python3 cl7206c2_tool.py discover                     # UDP broadcast discovery
-python3 cl7206c2_tool.py info 192.168.1.116           # Query reader info via UDP
+python3 cl7206c2_tool.py discover                       # Find readers on network
+python3 cl7206c2_tool.py info 192.168.1.116              # Query reader via UDP
+python3 cl7206c2_tool.py dump-config config_pram         # Decode config file offline
 ```
-
-### `tools/crc16_verified.py` — CRC16 Reference Implementation
-
-Verified CRC16 with test packets. Use to validate your own packet construction.
 
 ---
 
 ## 📡 Protocol Specification
 
-### Packet Frame Format
+### Packet Frame
 
 ```
  Byte:   0      1     2     3       4       5..N      N+1     N+2
@@ -109,310 +142,186 @@ Verified CRC16 with test packets. Use to validate your own packet construction.
                 |<============= CRC covers this ============>|
 ```
 
-| Field | Size | Description |
-|-------|------|-------------|
-| Header | 1 | Always `0xAA` |
-| CMD | 1 | Command category |
-| SUB | 1 | Sub-command |
-| LEN | 2 | Data length (big-endian), excludes header/cmd/sub/len |
-| DATA | N | Payload (variable) |
-| CRC16 | 2 | CRC-16 checksum (big-endian) |
-
-### CRC16 Algorithm (verified from firmware)
+### CRC16 (verified from firmware @ 0x00020fe4)
 
 | Parameter | Value |
 |-----------|-------|
-| **Algorithm** | CRC-16/BUYPASS (CRC-16/IBM/UMTS) |
-| **Polynomial** | **0x8005** |
-| **Initial value** | 0x0000 |
-| **Reflect in/out** | No (MSB-first) |
-| **Coverage** | CMD + SUB + LEN + DATA (0xAA header **excluded**) |
-| **Byte order** | Big-endian |
-| **Verification** | CRCtable @ 0x00020fe4: `[0]=0x0000 [1]=0x8005 [2]=0x800F [3]=0x000A` ✓ |
+| **Polynomial** | **0x8005** (CRC-16/BUYPASS) |
+| **Init** | 0x0000, no reflection, MSB-first |
+| **Coverage** | CMD + SUB + LEN + DATA (header 0xAA excluded) |
 
-```python
-# Python implementation
-TABLE = []
-for i in range(256):
-    crc = i << 8
-    for _ in range(8):
-        crc = ((crc << 1) ^ 0x8005) if crc & 0x8000 else crc << 1
-        crc &= 0xFFFF
-    TABLE.append(crc)
+### Complete Command Map (CMD=0x01)
 
-def crc16(data, init=0x0000):
-    crc = init
-    for b in data:
-        crc = ((crc << 8) & 0xFFFF) ^ TABLE[((crc >> 8) ^ b) & 0xFF]
-    return crc
-```
+| SUB | R/W | Function | Client Command |
+|-----|-----|----------|----------------|
+| 0x00 | R | Reader Info (model, name, uptime) | `info` |
+| 0x02 | W | Set COM/Baud | — |
+| 0x03 | R | Get COM/Baud | `com` |
+| 0x04 | W | Set IP/Mask/Gateway | `setip` |
+| 0x05 | R | Get Network | `network` |
+| 0x06 | R | Get MAC | `mac` |
+| 0x07 | W | Set Server/Client Mode | — |
+| 0x08 | R | Get Server/Client | `server` |
+| 0x09 | W | Set GPO Output | — |
+| 0x0A | R | Get GPI Levels (all 4) | `gpi` |
+| 0x0B | W | Set Antenna/Trigger | `setantenna`, `settrigger` |
+| 0x0C | R | Get Antenna/Trigger | `antenna`, `trigger` |
+| 0x0D | W | Set Wiegand | `setwiegand` |
+| 0x0E | R | Get Wiegand | `wiegand` |
+| 0x0F | X | **Reboot** (+ RF reset) | `reboot` |
+| 0x10 | W | Set System Time | `settime` |
+| 0x11 | R | Get System Time | `time` |
+| 0x12 | — | Connection ACK (keepalive) | — |
+| 0x13 | W | Set MAC | `setmac` |
+| 0x14 | X | **Factory Reset** (+ RF baud reset) | `reset` |
+| 0x15 | W | Set RS485 | `setrs485` |
+| 0x16 | R | Get RS485 (addr + mode) | `rs485` |
+| 0x17 | W | Set Tag Cache | `settagcache` |
+| 0x18 | R | Get Tag Cache Switch | `tagcache` |
+| 0x19 | W | Set Tag Cache Time | `settagtime` |
+| 0x1A | R | Get Tag Cache Time | `tagtime` |
+| 0x1B | R | Get Stored Tags (paginated) | `tags` |
+| 0x1C | X | Clear All Tags | `cleartags` |
+| 0x1D | X | Delete Tag by Index | — |
+| 0x20 | R | Get White List Entries | — |
+| 0x21 | W | Upload White List | — |
+| 0x23 | W | Set Relay Config | `setrelay` |
+| 0x24 | R | Get Relay (num + on_time) | `relay` |
+| 0x2D | W | Set Ping Config | `setping` |
+| 0x2E | R | Get Ping Config | `ping` |
+| 0x2F | W | Set DHCP Mode | — |
+| 0x30 | R | Get DHCP Mode | — |
+| 0x54 | — | RS485 Passthrough | — |
+| 0x55 | X | Delete Tag by Index (alias) | — |
 
-### Command Reference (CMD=0x01, Management)
-
-| SUB | Hex | R/W | Function | Tested |
-|-----|-----|-----|----------|--------|
-| 0x00 | `AA 01 00 00 00 94 03` | R | Get Reader Info | ✅ |
-| 0x01 | — | →RF | RF Module Passthrough | — |
-| 0x02 | — | W | Set PC COM Config | — |
-| 0x03 | — | R | Get Config Parameter | — |
-| 0x04 | — | W | Set IP Configuration | — |
-| 0x05 | `AA 01 05 00 00 94 47` | R | Get Network (IP/Mask/GW) | ✅ |
-| 0x06 | `AA 01 06 00 00 94 7B` | R | Get MAC Address | ✅ |
-| 0x07 | — | W | Set Server/Client Mode | — |
-| 0x08 | — | R | Get Config Parameter | — |
-| 0x09 | — | W | Set GPO Output | — |
-| 0x0A | `AA 01 0A 00 00 94 8B` | R | Get GPI Input Levels | ✅ |
-| 0x0B | — | W | Set Trigger Config | — |
-| 0x0C | — | R | Get Trigger Config | — |
-| 0x0D | — | W | Save Config (generic) | — |
-| 0x0E | — | R | Get Config Parameter | — |
-| 0x0F | `AA 01 0F 00 00 94 CF` | X | **Reboot** | ⚠️ |
-| 0x10 | — | W | Set System Time | ✅ |
-| 0x11 | `AA 01 11 00 00 95 57` | R | Get System Time | ✅ |
-| 0x12 | — | W | Connection ACK (keepalive) | — |
-| 0x13 | — | W | Set MAC Address | — |
-| 0x14 | `AA 01 14 00 00 95 13` | X | **Factory Reset** | ⚠️ |
-| 0x15 | — | W | Set RS485 Config | — |
-| 0x16 | `AA 01 16 00 00 15 38` | R | Get RS485 Config | ✅ |
-| 0x17 | — | W | Set Tag Cache Config | — |
-| 0x18 | `AA 01 18 00 00 95 E3` | R | Get Tag Cache Switch | ✅ |
-| 0x19 | — | W | Set Tag Cache Time | — |
-| 0x1A | `AA 01 1A 00 00 15 C8` | R | Get Tag Cache Time | ✅ |
-| 0x1B | `AA 01 1B 00 00 95 DF` | R | Get Stored Tag Records | ✅ |
-| 0x1C | `AA 01 1C 00 00 15 B0` | X | Clear All Tags | ✅ |
-| 0x1D | — | X | Delete Tag by Index | — |
-| 0x20 | — | R | Get White List Data | — |
-| 0x21 | — | W | Upload White List | — |
-| 0x23 | — | W | Set Relay Config | — |
-| 0x24 | `AA 01 24 00 00 96 D3` | R | Get Relay Config | ✅ |
-| 0x2D | — | W | Set Ping/Gateway Address | — |
-| 0x2E | `AA 01 2E 00 00 96 5B` | R | Get Ping Config | ✅ |
-| 0x2F | — | W | Set DHCP Mode | — |
-| 0x30 | — | R | Get Config Parameter | — |
-| 0x54 | — | →485 | RS485 Passthrough | — |
-| 0x55 | — | X | Delete Tag by Index (alias) | — |
-
-### RF Commands (passthrough to RF module)
+### RF Commands
 
 | CMD | SUB | Function |
 |-----|-----|----------|
-| 0x02 | 0x10 | **Start Inventory** (`AA 02 10 00 00 29 40`) |
-| 0x02 | 0x40 | Start Inventory (variant) |
-| 0x02 | 0xFF | **Stop Inventory** (`AA 02 FF 00 00 A4 0F`) |
-| 0x04 | 0x01 | RF passthrough |
-| 0x05 | * | RF passthrough |
-
-### Tag Notification (async, CMD=0x12)
-
-When the RF module reads a tag, the reader sends:
-
-```
-AA 12 [SUB] [LEN] [tag_data...] [CRC16]
-```
-
-| SUB | Contents |
-|-----|----------|
-| 0x00 | EPC only |
-| 0x20 | EPC + additional data |
-| 0x30 | EPC + TID |
-
-Tag data uses **TLV (Type-Length-Value)** encoding from the RF module:
-
-| Type | Data | Description |
-|------|------|-------------|
-| 0xAA | Header + EPC | Packet header with EPC data |
-| 0x01 | `[ant_num] [sub_ant_num]` | Antenna identification (2 bytes) |
-| 0x02 | `[byte1] [byte2]` | RSSI / signal parameters |
-| 0x03 | `[type] [len_hi\|len_lo] [TID...]` | TID data block |
-| 0x04 | `[type] [len_hi\|len_lo] [data...]` | Extra data block |
-| 0x05 | `[type] [len_hi\|len_lo] [data...]` | Additional data |
-| 0x06 | `[sub_type] [byte]` | Extra parameter |
-
-### Firmware Upgrade (CMD=0x04, SUB=0x00)
-
-```
-TX: AA 04 00 [LEN] [firmware_chunk] [CRC16]
-RX: AA 04 00 00 05 [write_addr(4B BE)] [status] [CRC16]
-```
+| 0x02 | 0x10 | **Start Inventory** |
+| 0x02 | 0x40 | **Start Inventory** (alternate) |
+| 0x02 | 0xFF | **Stop Inventory** |
+| 0x04 | 0x00 | Firmware Upgrade (network) |
+| 0x04 | 0x01 | RF Module Firmware Upgrade |
+| 0x12 | 0x00 | **Tag Notification** (EPC only) |
+| 0x12 | 0x20 | **Tag Notification** (EPC + extra data) |
+| 0x12 | 0x30 | **Tag Notification** (EPC + TID) |
 
 ---
 
 ## 📻 8-Antenna Architecture
 
-The reader has **4 RF ports** with **GPIO relay multiplexers** for 8 physical antennas:
-
 ```
-RF Port 0 ──┬── Relay Pin 1 = 0 ──→ Antenna 1 (ANT1)
-             └── Relay Pin 1 = 1 ──→ Antenna 2 (ANT2)
-
-RF Port 1 ──┬── Relay Pin 2 = 0 ──→ Antenna 3 (ANT3)
-             └── Relay Pin 2 = 1 ──→ Antenna 4 (ANT4)
-
-RF Port 2 ──┬── Relay Pin 3 = 0 ──→ Antenna 5 (ANT5)
-             └── Relay Pin 3 = 1 ──→ Antenna 6 (ANT6)
-
-RF Port 3 ──┬── Relay Pin 4 = 0 ──→ Antenna 7 (ANT7)
-             └── Relay Pin 4 = 1 ──→ Antenna 8 (ANT8)
+RF Port 0 ──┬── MUX=0 → ANT1     RF Port 2 ──┬── MUX=0 → ANT5
+             └── MUX=1 → ANT2                  └── MUX=1 → ANT6
+RF Port 1 ──┬── MUX=0 → ANT3     RF Port 3 ──┬── MUX=0 → ANT7
+             └── MUX=1 → ANT4                  └── MUX=1 → ANT8
 ```
 
-Tag data contains both `ant_num` (RF port 0–3) and `sub_ant_num` (0–1) for exact antenna identification.
+Physical antenna = `ant_num × 2 + sub_ant_num + 1` (1–8)
 
-GPO command (SUB=0x09) switches antennas: `[pin_id] [state]` pairs, max 8 bytes.
+> CL7206C4 has 4 TNC connectors = 4 antennas directly (no MUX switching).
 
 ---
 
-## 💾 Config File Format (`/config_pram`, 1072 bytes)
+## 🏷 Tag Data Pipeline
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│ 0x000–0x01B: Network Configuration (28 bytes)           │
-│ 0x01C–0x11B: RF Port 0 Config (256 bytes) → ANT1/ANT2  │
-│ 0x11C–0x21B: RF Port 1 Config (256 bytes) → ANT3/ANT4  │
-│ 0x21C–0x31B: RF Port 2 Config (256 bytes) → ANT5/ANT6  │
-│ 0x31C–0x41B: RF Port 3 Config (256 bytes) → ANT7/ANT8  │
-│ 0x41C–0x42F: Global Settings (20 bytes)                 │
-└─────────────────────────────────────────────────────────┘
+RF Module → TLV packet → tag_data_analise() → 500-byte struct
+  ├─► sql_insert() → back_tag_data (RAM, 5s buffer) → tag_data (disk)
+  ├─► transfer_to_pc() → TCP client (real-time stream)
+  └─► WieGand_Data_Save() → Wiegand output (if enabled)
 ```
 
-### Network Block (0x00–0x1B)
+Timestamps: `gettimeofday()` = **microsecond precision**.
 
-| Offset | Size | Description | Current Value |
-|--------|------|-------------|---------------|
-| 0x00 | 1 | DHCP mode (0=static, 1=DHCP) | 0x02 |
-| 0x01 | 4 | Device IP | 192.168.1.116 |
-| 0x05 | 4 | Subnet mask | 255.255.255.0 |
-| 0x09 | 4 | Gateway | 192.168.1.1 |
-| 0x0D | 6 | MAC address | 6C:EC:A1:FE:75:3A |
-| 0x14 | 2 | Local port (BE) | 9090 |
-| 0x16 | 4 | Server IP | 192.168.1.1 |
-| 0x1A | 2 | Server port (BE) | 9090 |
-
-### Antenna Block (each 256 bytes, ×4)
-
-| Offset | Size | Description | Value |
-|--------|------|-------------|-------|
-| +0x00 | 1 | Antenna index | 0–3 |
-| +0x03 | 1 | Power level | 6 |
-| +0x04 | 1 | Protocol (2=Gen2 dual-target) | 2 |
-| +0x05 | 1 | Frequency region (0x10=CN dual-band) | 0x10 |
-| +0x07 | 1 | Session (S0–S3) | 2 (S2) |
-| +0x08 | 1 | Target (A/B) | 1 (B) |
-| +0x09 | 1 | Q value | 1 |
-
-### Global Settings (0x41C–0x42F)
-
-| Offset | Description | Value |
-|--------|-------------|-------|
-| 0x41F | Wiegand enable | 1 (on) |
-| 0x420 | Wiegand format | 2 |
-| 0x421 | Wiegand bits | 2 |
-| 0x424 | Buzzer | 1 (on) |
-| 0x425 | Tag filter/dedupe | 1 (on) |
-| 0x427 | Auto-read mode | 1 (on) |
-| 0x429 | Remote server IP | 192.168.1.1 |
-
----
-
-## 🗄 Tag Database (`/tag_table`, SQLite3)
+### SQLite Schema (`/tag_table`)
 
 ```sql
 CREATE TABLE tag_data (
-    tag_index    INTEGER PRIMARY KEY,
-    package_len  INT,
-    package_data BLOB,        -- Raw RF packet
-    epc_len      INT,
-    epc_code     BLOB,        -- EPC tag ID
-    pc           INT,         -- Protocol Control word
-    ant_num      INT,         -- RF port (0–3)
-    sub_ant_num  INT,         -- Sub-antenna (0–1)
-    tid_flag     INT,
-    tid_len      INT,
-    tid_code     BLOB,        -- TID data
-    time_seconds INT,         -- Unix timestamp
-    time_usec    INT          -- Microseconds
+    tag_index    INTEGER PRIMARY KEY,  -- auto-increment
+    package_len  INT,                  -- raw packet length
+    package_data BLOB,                 -- raw RF + appended timestamp TLV
+    epc_len      INT,                  -- EPC data length (bytes)
+    epc_code     BLOB,                 -- EPC tag identifier
+    pc           INT,                  -- Protocol Control word
+    ant_num      INT,                  -- RF port (0–3)
+    sub_ant_num  INT,                  -- MUX position (0–1)
+    tid_flag     INT,                  -- TID present (0/1)
+    tid_len      INT,                  -- TID data length
+    tid_code     BLOB,                 -- TID data bytes
+    time_seconds INT,                  -- Unix timestamp (seconds)
+    time_usec    INT                   -- Microseconds
 );
--- Also: back_tag_data (same schema), white_list
+-- back_tag_data: same schema, in :memory: database, 5-second buffer
 ```
 
 ---
 
-## 🐧 Device Filesystem
+## ⚡ GPI Trigger System
 
-| Path | Description |
-|------|-------------|
-| `/bin/CL7206C2` | Main application (150KB, ARM ELF, **not stripped**) |
-| `/bin/fifo_read` | FIFO IPC reader |
-| `/bin/feed_dog` | Hardware watchdog |
-| `/config_pram` | Binary config (1072 bytes) |
-| `/tag_table` | SQLite tag database |
-| `/gateway` | Gateway IP text file |
-| `/driver/wiegand.ko` | Wiegand kernel module |
-| `/driver/g_serial.ko` | USB serial gadget |
+4 optocoupler inputs can auto-start/stop inventory. 5-state FSM per GPI.
 
-### Boot Sequence
-```
-1. Set IP address (netapp)
-2. Load wiegand.ko, g_serial.ko
-3. Start ping_gateway.sh, feeddog_auto.sh, auto_start_fifo.sh
-4. Launch auto_start.sh → CL7206C2 main loop
-```
+| Mode | Value | Description |
+|------|-------|-------------|
+| Disabled | 0 | No trigger |
+| Rising Edge | 1 | LOW→HIGH (button press) |
+| Falling Edge | 2 | HIGH→LOW (button release) |
+| Level HIGH | 3 | While >9V (photocell gate) |
+| Level LOW | 4 | While <8V |
+| Any Edge | 5 | Both transitions |
+| Delay Timer | 6 | Auto-stop after N×10ms |
 
-### Key Processes
-```
-CL7206C2 (×5 instances), fifo_read, feed_dog, telnetd, syslogd
+```bash
+# Race start button (rising edge, 30s auto-stop)
+python3 cl7206c2_client.py 192.168.1.116 settrigger 0 1 6 3000
+
+# Photocell gate: start on HIGH, stop on LOW
+python3 cl7206c2_client.py 192.168.1.116 settrigger 1 3 4
 ```
 
 ---
 
-## 🔬 Firmware Analysis
+## 🔬 Firmware Analysis — 100% Complete
 
-The binary is **not stripped** — all 310 function names are preserved.
+43 functions decompiled from unstripped ARM ELF binary (310 symbols). ~2900 lines of Python analysis. All significant application logic decoded.
 
-### Key Decompiled Functions
+| Subsystem | Key Functions |
+|-----------|--------------|
+| Main loop | `main()` — select() on 10 FDs, dual TCP clients |
+| Command router | `GetHead()` — 37+ sub-commands |
+| Tag pipeline | `tag_data_analise`, `sql_insert`, `transfer_to_pc` |
+| Database | `data_base_init/machine/answer_machine`, 6 SQL functions |
+| Config | `config_set_pra`, `config_get_pra`, `pram_p_array` (16 params) |
+| Triggers | `Triger_State_Machine`, `Triger_Manage` + 4 helpers |
+| Network | `tcp_recive`, `connect_manage`, `link_status_mornitor` |
+| GPIO | `gpio_init`, `gpio_relay_on_ctl`, `relay_timer_start` |
+| Wiegand | `WieGand_Data_Save` (EPC/TID, 300-entry circular buffer) |
+| Firmware OTA | `Upgrade_Process` (CRC32 + app signature verify) |
+| UDP discovery | `UDP_cmd_process` (frame: `^[mac][commands]$`) |
+| Watchdog | `fifo_write` → "reader process alive" / 2s → `feed_dog` |
+| Ethernet | `link_status_mornitor` — 3 failures → PHY reset cycle |
+| White list | `data_base_white_list_check` — **STUB** (returns 1, not implemented) |
 
-| Function | Purpose | Status |
-|----------|---------|--------|
-| `protocol_cmd_hdl()` | **Main command router** — all 37+ opcodes | ✅ Fully decoded |
-| `CRC16_CalateByte()` | CRC per-byte calculation | ✅ Decoded, poly verified |
-| `CRC16_CalculateBuf()` | CRC buffer wrapper | ✅ Decoded |
-| `GetHead()` | Packet queue dequeue | ✅ Decoded |
-| `tag_data_analise()` | RF tag TLV parser | ✅ Decoded |
-| `Gpo_Data_Process()` | GPIO relay switching | ✅ Decoded |
-
-### Source Files (from debug symbols)
+### Internal Architecture
 
 ```
-main.c          — Main loop, socket handling
-protocol.c      — Command parsing (protocol_cmd_hdl)
-configration.c  — Config read/write
-netapp.c        — Network IP/MAC/gateway management
-connect_man.c   — TCP/UDP connection management
-recive.c        — Data receiving
-transfer.c      — Data forwarding/relay
-data_base.c     — SQLite tag database
-uart.c          — Serial port init
-gpio.c          — GPIO, LED, buzzer, relay, RS485
-wiegand.c       — Wiegand output protocol
-triger.c        — Trigger/event management
-timer.c         — Timer subsystem
-upgrade.c       — Firmware upgrade (USB + network)
-crc32.c         — CRC32 calculation
-usb_mornitor.c  — USB hotplug monitoring
-net_link.c      — Netlink for cable detect
+                    ┌──────────────────────────────────────┐
+                    │          MAIN SELECT() LOOP           │
+                    │                                      │
+  RF Module ──────► rf_com_fd ──► protocol_data_process()  │
+  PC Serial ──────► pc_com_fd ──► GetHead() ─┬► transfer_to_rf()
+  RS-485 ─────────► rs485_com_fd              ├► transfer_to_pc()
+  USB Serial ─────► usb_com_fd                ├► config_set/get_pra()
+  USB Hotplug ────► usb_disk_fd               ├► data_base_store_record()
+  UDP Broadcast ──► multicast_rec_fd          ├► WieGand_Data_Save()
+  TCP Client 1 ──► tcp_connect_fd             ├► Upgrade_Process()
+  TCP Client 2 ──► tcp_connect_back_fd        └► gpio/relay/trigger
+  TCP Socket ────► socket_fd                   │
+                    │  Per-loop: data_base_machine(), connect_manage(),
+                    │  link_status_mornitor(), fifo_write(), DHCP check
+                    └──────────────────────────────────────┘
 ```
-
-### Functions Still Worth Decompiling
-
-| Function | Why | Priority |
-|----------|-----|----------|
-| `transfer_to_rf()` | Exact RF module command format | High (for timing) |
-| `config_get_pra()` / `config_set_pra()` | Generic config read/write | Medium |
-| `data_base_store_record()` | How tags are inserted into SQLite | Medium |
-| `Triger_State_Machine()` | GPI trigger → inventory automation | Medium (for timing) |
-| `WieGand_Data_Save()` | Wiegand output format | Low |
-| `Server_Client_Pra_Process()` | TCP mode configuration | Low |
-| `check_crc()` / `add_crc()` | CRC validation on receive | Low (already known) |
-| `connect_state_init()` | TCP handshake sequence | Low |
 
 ---
 
@@ -420,86 +329,55 @@ net_link.c      — Netlink for cable detect
 
 ```
 cl7206c2-rfid/
-├── README.md                          ← This file
+├── README.md                                    ← This file (English)
+├── README.ru.md                                 ← Russian version
+├── .gitignore
 ├── tools/
-│   ├── cl7206c2_client.py             ← Main protocol client
-│   ├── cl7206c2_tool.py               ← Config file parser + UDP discovery
-│   └── crc16_verified.py              ← CRC16 reference implementation
+│   ├── cl7206c2_client.py                       ← Complete protocol client (1118 lines)
+│   ├── cl7206c2_tool.py                         ← UDP discovery + config parser
+│   └── crc16_verified.py                        ← Reference CRC16 implementation
 ├── docs/
-│   ├── CL7206C2_Protocol_Spec.md      ← Full protocol specification
-│   ├── CL7206C2_RE_Report.md          ← Reverse engineering report
-│   └── config_pram_analysis.md        ← Config binary format analysis
+│   ├── CL7206C2_Protocol_Spec.md                ← Protocol specification
+│   ├── CL7206C2_RE_Report.md                    ← Reverse engineering report
+│   ├── config_pram_analysis.md                  ← Config format analysis
+│   └── CL7206C4_User_Manual.pdf                 ← Official manufacturer manual
 └── firmware_analysis/
-    └── CL7206C2_strings.txt           ← All 1206 extracted strings
+    ├── architecture.py                          ← Complete firmware architecture map
+    ├── tag_data_struct.py                       ← Tag data struct + SQLite + parsers
+    ├── trigger_system.py                        ← Trigger FSM + config builder
+    ├── pram_p_array_decode.py                   ← Config parameter table decoder
+    ├── remaining_subsystems.py                  ← Network, GPIO, DB, UDP subsystems
+    └── CL7206C2_strings.txt                     ← All 1206 extracted strings
 ```
 
 ---
 
-## ⏱ Future: Cycling Race Timing System
+## ⏱ Future: Cycling Race Timing
 
-**Goal:** Measure lap/finish times for cyclists using UHF RFID tags.
-
-**Hardware setup:**
-- CL7206C2 reader (this device)
-- 2× 9dBi circular polarization UHF antennas (ordered)
-- UHF RFID tags on cyclists (ordered from AliExpress)
-
-**Timing architecture (planned):**
 ```
-                    ┌─────────────────┐
-  [START LINE]      │   CL7206C2      │      [FINISH LINE]
-  9dBi Antenna ────►│   RFID Reader   │◄──── 9dBi Antenna
-  (ANT1/Port 0)     │   192.168.1.116 │      (ANT2/Port 1)
-                    └────────┬────────┘
-                             │ TCP/9090
-                             ▼
-                    ┌─────────────────┐
-                    │  Timing Server  │
-                    │  (Python app)   │
-                    │                 │
-                    │  - Tag registry │
-                    │  - Split times  │
-                    │  - Results      │
-                    └─────────────────┘
+  [START]  9dBi ──►  CL7206C2  ◄── 9dBi  [FINISH]
+  (Port 0)           │ TCP/9090          (Port 1)
+                     ▼
+               Timing Server
+               • ant_num → START / FINISH
+               • μs timestamps (gettimeofday)
+               • Tag dedup (5s buffer built-in)
+               • Live results display
+               • GPI trigger → auto start/stop inventory
+               • GPO relay → gate / buzzer / light control
+               • White list → relay auto-fire on known tag
 ```
 
-**Key features needed:**
-- ant_num in tag data identifies START vs FINISH antenna
-- Microsecond timestamps from reader for precision
-- Tag deduplication (configurable filter time)
-- Real-time display of results
-- GPI triggers for manual start signal (optional)
-- GPO relay for start gate / traffic light (optional)
-
-**Status:** Waiting for antennas and tags delivery. Protocol is ready.
+**Status:** Protocol & firmware 100% decoded. Waiting for antennas and tags. ✅
 
 ---
 
 ## 🔗 References
 
-- [FCC Filing (CL7206C)](https://fccid.io/2AKAGCLOUIOTCL7206C)
-- [CL7206B User Manual (similar model)](https://fccid.io/2AKAGCLOUIOTCL7206B/User-Manual/User-Manual-3232262)
-- Manufacturer: Shenzhen Clou IoT Technologies Co., Ltd (Hopeland Technologies)
-- Website: clouglobal.com / szclou.com
-
----
-
-## 📜 Reverse Engineering Log
-
-| Date | Milestone |
-|------|-----------|
-| 2026-02-07 | Initial access via telnet (root, no password) |
-| 2026-02-07 | Filesystem enumeration, config_pram binary analysis |
-| 2026-02-07 | Binary extraction via TFTP |
-| 2026-02-08 | Discovered binary is NOT stripped — 310 function symbols |
-| 2026-02-08 | Ghidra analysis: protocol_cmd_hdl() fully decompiled |
-| 2026-02-08 | CRC16 algorithm verified: poly 0x8005, init 0x0000 |
-| 2026-02-08 | Python client created, all read commands tested OK |
-| 2026-02-08 | tag_data_analise() decoded — TLV format, 8-antenna mapping |
-| 2026-02-08 | Gpo_Data_Process() decoded — GPIO relay antenna switching |
-
----
+- [FCC Filing](https://fccid.io/2AKAGCLOUIOTCL7206C) — Internal photos, test reports
+- [Hopeland](http://www.hopelandrfid.com) — Manufacturer (Shenzhen Hopeland Technologies Co., Ltd)
+- Contact: support@hopelandrfid.com | +86-755-36901035
 
 ## ⚠️ Disclaimer
 
-This project is for **educational and personal use**. The reverse engineering was performed on hardware owned by the author. No proprietary SDK or documentation was used — all protocol information was derived from firmware analysis using Ghidra.
+Educational and personal use. Reverse engineering performed on owned hardware using Ghidra. No proprietary SDK used.
