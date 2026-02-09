@@ -1,0 +1,95 @@
+2026-02-08 06:11:50 [INFO ] [SYS  ] Connecting to 192.168.1.116:9090...
+2026-02-08 06:11:50 [INFO ] [CMD  ] Connected to 192.168.1.116:9090
+2026-02-08 06:11:51 [INFO ] [CMD  ] get_info: OK (26 bytes)
+2026-02-08 06:11:51 [DEBUG] [PROTO] get_info: 000100130010434c37323036435f323031373036303223efafdf
+2026-02-08 06:11:51 [INFO ] [CMD  ] get_time: OK (8 bytes)
+2026-02-08 06:11:51 [DEBUG] [PROTO] get_time: 6987fef5000ab598
+2026-02-08 06:11:51 [INFO ] [CMD  ] get_network: OK (12 bytes)
+2026-02-08 06:11:51 [DEBUG] [PROTO] get_network: c0a80174ffffff00c0a80101
+2026-02-08 06:11:51 [INFO ] [CMD  ] get_tag_cache: OK (1 bytes)
+2026-02-08 06:11:51 [DEBUG] [PROTO] get_tag_cache: 00
+2026-02-08 06:11:51 [INFO ] [CMD  ] get_tag_cache_time: OK (2 bytes)
+2026-02-08 06:11:51 [DEBUG] [PROTO] get_tag_cache_time: 0001
+2026-02-08 06:11:53 [INFO ] [CMD  ] get_info: OK (26 bytes)
+2026-02-08 06:11:53 [DEBUG] [PROTO] get_info: 000100130010434c37323036435f323031373036303223efafe1
+2026-02-08 06:12:04 [INFO ] [CMD  ] set_time: OK (1 bytes)
+2026-02-08 06:12:04 [DEBUG] [PROTO] set_time: 00
+2026-02-08 06:12:04 [INFO ] [CMD  ] get_time: OK (8 bytes)
+2026-02-08 06:12:04 [DEBUG] [PROTO] get_time: 6987ff040000056c
+2026-02-08 06:14:18 [INFO ] [SYS  ] Connecting to 192.168.1.116:9090...
+2026-02-08 06:14:18 [INFO ] [CMD  ] Connected to 192.168.1.116:9090
+2026-02-08 06:14:19 [INFO ] [CMD  ] get_info: OK (26 bytes)
+2026-02-08 06:14:19 [DEBUG] [PROTO] get_info: 000100130010434c37323036435f323031373036303223efb074
+2026-02-08 06:14:19 [INFO ] [CMD  ] get_time: OK (8 bytes)
+2026-02-08 06:14:19 [DEBUG] [PROTO] get_time: 6987ff8a0005dbd2
+2026-02-08 06:14:19 [INFO ] [CMD  ] get_network: OK (12 bytes)
+2026-02-08 06:14:19 [DEBUG] [PROTO] get_network: c0a80174ffffff00c0a80101
+2026-02-08 06:14:19 [INFO ] [CMD  ] get_tag_cache: OK (1 bytes)
+2026-02-08 06:14:19 [DEBUG] [PROTO] get_tag_cache: 00
+2026-02-08 06:14:19 [INFO ] [CMD  ] get_tag_cache_time: OK (2 bytes)
+2026-02-08 06:14:19 [DEBUG] [PROTO] get_tag_cache_time: 0001
+2026-02-08 06:14:26 [INFO ] [CMD  ] get_network: OK (12 bytes)
+2026-02-08 06:14:26 [DEBUG] [PROTO] get_network: c0a80174ffffff00c0a80101
+2026-02-08 06:14:26 [INFO ] [CMD  ] get_mac: OK (6 bytes)
+2026-02-08 06:14:26 [DEBUG] [PROTO] get_mac: 6ceca1fe753a
+2026-02-08 06:14:26 [INFO ] [CMD  ] get_server_mode: OK (9 bytes)
+2026-02-08 06:14:26 [DEBUG] [PROTO] get_server_mode: 002382c0a801012382
+2026-02-08 06:14:37 [INFO ] [CMD  ] get_wiegand: OK (3 bytes)
+2026-02-08 06:14:37 [DEBUG] [PROTO] get_wiegand: 000000
+2026-02-08 06:14:41 [INFO ] [CMD  ] get_rs485: OK (2 bytes)
+2026-02-08 06:14:41 [DEBUG] [PROTO] get_rs485: 0102
+2026-02-08 06:14:45 [INFO ] [CMD  ] get_rs485: OK (2 bytes)
+2026-02-08 06:14:45 [DEBUG] [PROTO] get_rs485: 0102
+2026-02-08 06:14:49 [WARNING] [CMD  ] get_tags: no response from reader
+2026-02-08 06:15:38 [INFO ] [CMD  ] get_network: OK (12 bytes)
+2026-02-08 06:15:38 [DEBUG] [PROTO] get_network: c0a80174ffffff00c0a80101
+2026-02-08 06:15:38 [INFO ] [CMD  ] get_mac: OK (6 bytes)
+2026-02-08 06:15:38 [DEBUG] [PROTO] get_mac: 6ceca1fe753a
+2026-02-08 06:15:38 [INFO ] [CMD  ] get_server_mode: OK (9 bytes)
+2026-02-08 06:15:38 [DEBUG] [PROTO] get_server_mode: 002382c0a801012382
+2026-02-08 06:15:42 [INFO ] [CMD  ] get_info: OK (26 bytes)
+2026-02-08 06:15:42 [DEBUG] [PROTO] get_info: 000100130010434c37323036435f323031373036303223efb0c7
+2026-02-08 06:16:16 [INFO ] [CMD  ] set_tag_cache: OK (1 bytes)
+2026-02-08 06:16:16 [DEBUG] [PROTO] set_tag_cache: 00
+2026-02-08 06:16:17 [INFO ] [CMD  ] set_tag_cache: OK (1 bytes)
+2026-02-08 06:16:17 [DEBUG] [PROTO] set_tag_cache: 00
+2026-02-08 06:16:18 [INFO ] [CMD  ] set_tag_cache: OK (1 bytes)
+2026-02-08 06:16:18 [DEBUG] [PROTO] set_tag_cache: 00
+2026-02-08 06:16:18 [INFO ] [CMD  ] set_tag_cache: OK (1 bytes)
+2026-02-08 06:16:18 [DEBUG] [PROTO] set_tag_cache: 00
+2026-02-08 06:19:32 [INFO ] [SYS  ] Connecting to 192.168.1.116:9090...
+2026-02-08 06:19:32 [INFO ] [CMD  ] Connected to 192.168.1.116:9090
+2026-02-08 06:19:33 [INFO ] [CMD  ] get_info: OK (26 bytes)
+2026-02-08 06:19:33 [DEBUG] [PROTO] get_info: 000100130010434c37323036435f323031373036303223efb1af
+2026-02-08 06:19:33 [INFO ] [CMD  ] get_time: OK (8 bytes)
+2026-02-08 06:19:33 [DEBUG] [PROTO] get_time: 698800c5000211a7
+2026-02-08 06:19:33 [INFO ] [CMD  ] get_network: OK (12 bytes)
+2026-02-08 06:19:33 [DEBUG] [PROTO] get_network: c0a80174ffffff00c0a80101
+2026-02-08 06:19:33 [INFO ] [CMD  ] get_tag_cache: OK (1 bytes)
+2026-02-08 06:19:33 [DEBUG] [PROTO] get_tag_cache: 00
+2026-02-08 06:19:33 [INFO ] [CMD  ] get_tag_cache_time: OK (2 bytes)
+2026-02-08 06:19:33 [DEBUG] [PROTO] get_tag_cache_time: 0001
+2026-02-08 06:20:57 [INFO ] [SYS  ] Connecting to 192.168.1.116:9090...
+2026-02-08 06:20:57 [INFO ] [CMD  ] Connected to 192.168.1.116:9090
+2026-02-08 06:20:58 [INFO ] [CMD  ] get_info: OK (26 bytes)
+2026-02-08 06:20:58 [DEBUG] [PROTO] get_info: 000100130010434c37323036435f323031373036303223efb204
+2026-02-08 06:20:58 [INFO ] [CMD  ] get_time: OK (8 bytes)
+2026-02-08 06:20:58 [DEBUG] [PROTO] get_time: 6988011a00025c92
+2026-02-08 06:20:58 [INFO ] [CMD  ] get_network: OK (12 bytes)
+2026-02-08 06:20:58 [DEBUG] [PROTO] get_network: c0a80174ffffff00c0a80101
+2026-02-08 06:20:58 [INFO ] [CMD  ] get_tag_cache: OK (1 bytes)
+2026-02-08 06:20:58 [DEBUG] [PROTO] get_tag_cache: 00
+2026-02-08 06:20:58 [INFO ] [CMD  ] get_tag_cache_time: OK (2 bytes)
+2026-02-08 06:20:58 [DEBUG] [PROTO] get_tag_cache_time: 0001
+2026-02-08 06:22:32 [INFO ] [SYS  ] Connecting to 192.168.1.116:9090...
+2026-02-08 06:22:32 [INFO ] [CMD  ] Connected to 192.168.1.116:9090
+2026-02-08 06:22:33 [INFO ] [CMD  ] get_info: OK (26 bytes)
+2026-02-08 06:22:33 [DEBUG] [PROTO] get_info: 000100130010434c37323036435f323031373036303223efb262
+2026-02-08 06:22:33 [INFO ] [CMD  ] get_time: OK (8 bytes)
+2026-02-08 06:22:33 [DEBUG] [PROTO] get_time: 698801780006d6c5
+2026-02-08 06:22:33 [INFO ] [CMD  ] get_network: OK (12 bytes)
+2026-02-08 06:22:33 [DEBUG] [PROTO] get_network: c0a80174ffffff00c0a80101
+2026-02-08 06:22:33 [INFO ] [CMD  ] get_tag_cache: OK (1 bytes)
+2026-02-08 06:22:33 [DEBUG] [PROTO] get_tag_cache: 00
+2026-02-08 06:22:33 [INFO ] [CMD  ] get_tag_cache_time: OK (2 bytes)
+2026-02-08 06:22:33 [DEBUG] [PROTO] get_tag_cache_time: 0001

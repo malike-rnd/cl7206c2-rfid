@@ -53,378 +53,143 @@
     top: 0;
     z-index: 100;
   }
-
-  .header-logo {
-    font-size: 15px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    color: var(--cyan);
-  }
-
-  .header-logo span {
-    color: var(--text-2);
-    font-weight: 400;
-  }
-
-  .header-status {
-    margin-left: auto;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 12px;
-    color: var(--text-1);
-  }
-
-  .status-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--red);
-    transition: background 0.3s, box-shadow 0.3s;
-  }
-
-  .status-dot.on {
-    background: var(--green);
-    box-shadow: 0 0 8px var(--green);
-  }
+  .header-logo { font-size: 15px; font-weight: 700; letter-spacing: 1px; color: var(--cyan); }
+  .header-logo span { color: var(--text-2); font-weight: 400; }
+  .header-status { margin-left: auto; display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-1); }
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--red); transition: all 0.3s; }
+  .status-dot.on { background: var(--green); box-shadow: 0 0 8px var(--green); }
 
   /* ── Layout ─────────────────────────────────────────── */
-  .main {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
+  .main { max-width: 1200px; margin: 0 auto; padding: 20px 24px; display: flex; flex-direction: column; gap: 16px; }
 
   /* ── Panel ──────────────────────────────────────────── */
-  .panel {
-    background: var(--bg-1);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
-  }
-
+  .panel { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); overflow: visible; }
   .panel-head {
-    background: var(--bg-2);
-    padding: 8px 16px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    border-bottom: 1px solid var(--border);
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    color: var(--text-1);
-    cursor: pointer;
-    user-select: none;
+    background: var(--bg-2); padding: 8px 16px; display: flex; align-items: center; gap: 10px;
+    border-bottom: 1px solid var(--border); font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-1); cursor: pointer; user-select: none;
   }
+  .panel-head .icon { font-size: 14px; }
+  .panel-head .badge { margin-left: auto; background: var(--bg-3); border: 1px solid var(--border); border-radius: 3px; padding: 1px 8px; font-size: 10px; color: var(--text-2); font-weight: 400; }
+  .panel-body { padding: 16px; }
+  .panel.collapsed .panel-body { display: none; }
 
-  .panel-head .icon {
-    font-size: 14px;
-  }
-
-  .panel-head .badge {
-    margin-left: auto;
-    background: var(--bg-3);
-    border: 1px solid var(--border);
-    border-radius: 3px;
-    padding: 1px 8px;
-    font-size: 10px;
-    color: var(--text-2);
-    font-weight: 400;
-  }
-
-  .panel-body {
-    padding: 16px;
-  }
-
-  .panel.collapsed .panel-body {
-    display: none;
-  }
-
-  /* ── Connect Panel ──────────────────────────────────── */
-  .connect-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-
+  /* ── Inputs ─────────────────────────────────────────── */
   input[type="text"], input[type="number"] {
-    background: var(--bg-0);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 7px 12px;
-    color: var(--text-0);
-    font-family: var(--mono);
-    font-size: 13px;
-    outline: none;
-    transition: border-color 0.2s;
+    background: var(--bg-0); border: 1px solid var(--border); border-radius: 4px;
+    padding: 7px 12px; color: var(--text-0); font-family: var(--mono); font-size: 13px; outline: none; transition: border-color 0.2s;
   }
-
-  input:focus {
-    border-color: var(--cyan);
-  }
-
-  input::placeholder {
-    color: var(--text-2);
-  }
-
+  input:focus { border-color: var(--cyan); }
+  input::placeholder { color: var(--text-2); }
   .ip-input { width: 180px; }
   .port-input { width: 80px; }
+  select { background: var(--bg-0); border: 1px solid var(--border); border-radius: 4px; padding: 6px 10px; color: var(--text-0); font-family: var(--mono); font-size: 12px; outline: none; }
+  select:focus { border-color: var(--cyan); }
 
   /* ── Buttons ────────────────────────────────────────── */
   .btn {
-    font-family: var(--mono);
-    font-size: 12px;
-    font-weight: 500;
-    padding: 7px 16px;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.15s;
-    background: var(--bg-2);
-    color: var(--text-0);
-    letter-spacing: 0.5px;
+    font-family: var(--mono); font-size: 12px; font-weight: 500; padding: 7px 16px;
+    border: 1px solid var(--border); border-radius: 4px; cursor: pointer; transition: all 0.15s;
+    background: var(--bg-2); color: var(--text-0); letter-spacing: 0.5px;
   }
-
   .btn:hover { border-color: var(--border-hi); background: var(--bg-3); }
   .btn:active { transform: scale(0.97); }
   .btn:disabled { opacity: 0.35; cursor: not-allowed; }
-
   .btn-green { border-color: var(--green-dim); color: var(--green); }
   .btn-green:hover { background: var(--green-dim); border-color: var(--green); }
-
   .btn-red { border-color: var(--red-dim); color: var(--red); }
   .btn-red:hover { background: var(--red-dim); border-color: var(--red); }
-
   .btn-amber { border-color: var(--amber-dim); color: var(--amber); }
   .btn-amber:hover { background: var(--amber-dim); border-color: var(--amber); }
-
   .btn-cyan { border-color: var(--cyan-dim); color: var(--cyan); }
   .btn-cyan:hover { background: var(--cyan-dim); border-color: var(--cyan); }
 
+  .connect-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
   /* ── Info Grid ──────────────────────────────────────── */
-  .info-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 10px;
-  }
-
-  .info-cell {
-    background: var(--bg-0);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 8px 12px;
-  }
-
-  .info-cell .label {
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--text-2);
-    margin-bottom: 3px;
-  }
-
-  .info-cell .value {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--cyan);
-    word-break: break-all;
-  }
-
-  .info-cell .value.green { color: var(--green); }
-  .info-cell .value.amber { color: var(--amber); }
-  .info-cell .value.red { color: var(--red); }
+  .info-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+  .info-cell { background: var(--bg-0); border: 1px solid var(--border); border-radius: 4px; padding: 8px 12px; }
+  .info-cell .label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-2); margin-bottom: 3px; }
+  .info-cell .value { font-size: 14px; font-weight: 500; color: var(--cyan); word-break: break-all; }
 
   /* ── Time Panel ─────────────────────────────────────── */
-  .time-row {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    flex-wrap: wrap;
-  }
-
-  .time-display {
-    background: var(--bg-0);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 10px 16px;
-    text-align: center;
-    flex: 1;
-    min-width: 180px;
-  }
-
-  .time-display .label {
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--text-2);
-    margin-bottom: 4px;
-  }
-
-  .time-display .clock {
-    font-size: 22px;
-    font-weight: 600;
-    font-variant-numeric: tabular-nums;
-  }
-
-  .drift-indicator {
-    font-size: 12px;
-    padding: 4px 10px;
-    border-radius: 3px;
-    font-weight: 500;
-  }
-
+  .time-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .time-display { background: var(--bg-0); border: 1px solid var(--border); border-radius: 4px; padding: 10px 16px; text-align: center; flex: 1; min-width: 180px; }
+  .time-display .label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-2); margin-bottom: 4px; }
+  .time-display .clock { font-size: 22px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .drift-indicator { font-size: 12px; padding: 4px 10px; border-radius: 3px; font-weight: 500; }
   .drift-ok { color: var(--green); background: var(--green-dim); }
   .drift-warn { color: var(--amber); background: var(--amber-dim); }
   .drift-bad { color: var(--red); background: var(--red-dim); }
 
-  /* ── Inventory ──────────────────────────────────────── */
-  .inv-controls {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 12px;
-    flex-wrap: wrap;
-  }
+  /* ── Config ─────────────────────────────────────────── */
+  .config-section { margin-bottom: 16px; }
+  .config-section:last-child { margin-bottom: 0; }
+  .config-section h3 { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-2); margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid var(--border); }
+  .config-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
+  .config-row label { font-size: 12px; color: var(--text-1); min-width: 100px; }
 
-  .inv-stats {
-    margin-left: auto;
-    display: flex;
-    gap: 16px;
-    font-size: 12px;
-    color: var(--text-1);
-  }
-
+  /* ── Tag Table ──────────────────────────────────────── */
+  .inv-controls { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+  .inv-stats { margin-left: auto; display: flex; gap: 16px; font-size: 12px; color: var(--text-1); }
   .inv-stats span { color: var(--green); font-weight: 600; }
-
-  .tag-table-wrap {
-    overflow-x: auto;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    max-height: 400px;
-    overflow-y: auto;
-  }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 12px;
-  }
-
-  th {
-    background: var(--bg-2);
-    padding: 8px 12px;
-    text-align: left;
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--text-2);
-    font-weight: 600;
-    position: sticky;
-    top: 0;
-    z-index: 1;
-    border-bottom: 1px solid var(--border);
-  }
-
-  td {
-    padding: 6px 12px;
-    border-bottom: 1px solid var(--border);
-    color: var(--text-0);
-    font-variant-numeric: tabular-nums;
-  }
-
+  .tag-table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 4px; max-height: 400px; overflow-y: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th { background: var(--bg-2); padding: 8px 12px; text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-2); font-weight: 600; position: sticky; top: 0; z-index: 1; border-bottom: 1px solid var(--border); }
+  td { padding: 6px 12px; border-bottom: 1px solid var(--border); color: var(--text-0); font-variant-numeric: tabular-nums; }
   tr:hover td { background: var(--bg-2); }
-
-  tr.new-tag td {
-    animation: tagFlash 0.6s ease-out;
-  }
-
-  @keyframes tagFlash {
-    0% { background: var(--green-dim); }
-    100% { background: transparent; }
-  }
-
-  .epc-cell {
-    font-weight: 500;
-    color: var(--cyan);
-    letter-spacing: 0.5px;
-  }
-
+  tr.new-tag td { animation: tagFlash 0.6s ease-out; }
+  @keyframes tagFlash { 0% { background: var(--green-dim); } 100% { background: transparent; } }
+  .epc-cell { font-weight: 500; color: var(--cyan); letter-spacing: 0.5px; }
   .ant-cell { color: var(--amber); font-weight: 600; }
 
-  /* ── Log ─────────────────────────────────────────────── */
+  /* ── Log Tabs ───────────────────────────────────────── */
+  .log-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 8px; }
+  .log-tab {
+    padding: 6px 14px; font-size: 11px; font-family: var(--mono); letter-spacing: 0.5px;
+    color: var(--text-2); cursor: pointer; border-bottom: 2px solid transparent;
+    transition: all 0.15s; user-select: none;
+  }
+  .log-tab:hover { color: var(--text-1); }
+  .log-tab.active { color: var(--cyan); border-bottom-color: var(--cyan); }
+  .log-tab .tab-count { font-size: 9px; background: var(--bg-3); border-radius: 3px; padding: 1px 5px; margin-left: 4px; }
   .log-output {
-    background: var(--bg-0);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 10px 14px;
-    height: 150px;
-    overflow-y: auto;
-    font-size: 11px;
-    line-height: 1.6;
-    color: var(--text-1);
+    background: var(--bg-0); border: 1px solid var(--border); border-radius: 4px;
+    padding: 10px 14px; height: 200px; overflow-y: auto; font-size: 11px; line-height: 1.6; color: var(--text-1);
   }
-
-  .log-output .log-line {
-    white-space: pre-wrap;
-    word-break: break-all;
-  }
-
+  .log-output .log-line { white-space: pre-wrap; word-break: break-all; }
   .log-output .ts { color: var(--text-2); }
   .log-output .ok { color: var(--green); }
   .log-output .err { color: var(--red); }
   .log-output .warn { color: var(--amber); }
   .log-output .info { color: var(--cyan); }
+  .log-output .proto { color: var(--text-2); }
 
-  /* ── Config Panel ───────────────────────────────────── */
-  .config-section {
-    margin-bottom: 16px;
+  /* ── Tooltips ───────────────────────────────────────── */
+  .tip {
+    position: relative; display: inline-flex; align-items: center; justify-content: center;
+    width: 16px; height: 16px; border-radius: 50%; border: 1px solid var(--border-hi);
+    font-size: 10px; font-weight: 600; color: var(--text-2); cursor: help; flex-shrink: 0;
+    margin-left: 4px; vertical-align: middle; font-family: var(--sans);
   }
-
-  .config-section:last-child { margin-bottom: 0; }
-
-  .config-section h3 {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--text-2);
-    margin-bottom: 8px;
-    padding-bottom: 4px;
-    border-bottom: 1px solid var(--border);
+  .tip:hover { border-color: var(--cyan); color: var(--cyan); }
+  .tip .tip-text {
+    display: none; position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%);
+    background: var(--bg-3); border: 1px solid var(--border-hi); border-radius: 4px; padding: 8px 12px;
+    font-size: 11px; font-weight: 400; font-family: var(--sans); color: var(--text-0);
+    white-space: normal; width: 280px; line-height: 1.5; z-index: 200; box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+    text-transform: none; letter-spacing: 0;
   }
+  .tip:hover .tip-text { display: block; }
+  .tip .tip-text::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 5px solid transparent; border-top-color: var(--border-hi); }
 
-  .config-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 8px;
-    flex-wrap: wrap;
-  }
-
-  .config-row label {
-    font-size: 12px;
-    color: var(--text-1);
-    min-width: 100px;
-  }
-
-  select {
-    background: var(--bg-0);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 6px 10px;
-    color: var(--text-0);
-    font-family: var(--mono);
-    font-size: 12px;
-    outline: none;
-  }
-
-  select:focus { border-color: var(--cyan); }
+  /* ── Toggle Switch ──────────────────────────────────── */
+  .toggle { position: relative; width: 40px; height: 22px; flex-shrink: 0; }
+  .toggle input { opacity: 0; width: 0; height: 0; }
+  .toggle .slider { position: absolute; inset: 0; background: var(--bg-0); border: 1px solid var(--border); border-radius: 11px; cursor: pointer; transition: all 0.2s; }
+  .toggle .slider::before { content: ''; position: absolute; width: 16px; height: 16px; left: 2px; bottom: 2px; background: var(--text-2); border-radius: 50%; transition: all 0.2s; }
+  .toggle input:checked + .slider { background: var(--green-dim); border-color: var(--green); }
+  .toggle input:checked + .slider::before { transform: translateX(18px); background: var(--green); }
 
   /* ── Responsive ─────────────────────────────────────── */
   @media (max-width: 600px) {
@@ -436,7 +201,7 @@
 </head>
 <body>
 
-<!-- ═══════════════════════ HEADER ═══════════════════════ -->
+<!-- ═══════════════════ HEADER ═══════════════════════ -->
 <div class="header">
   <div class="header-logo">CL7206C2 <span>RFID TEST TOOL</span></div>
   <div class="header-status">
@@ -445,13 +210,13 @@
   </div>
 </div>
 
-<!-- ═══════════════════════ MAIN ═════════════════════════ -->
 <div class="main">
 
-  <!-- ── CONNECT ────────────────────────────────────── -->
+  <!-- ── CONNECT ──────────────────────────────────── -->
   <div class="panel" id="panelConnect">
     <div class="panel-head" onclick="togglePanel('panelConnect')">
       <span class="icon">⬡</span> Connection
+      <span class="tip">?<span class="tip-text">TCP подключение к ридеру. По умолчанию IP 192.168.1.116, порт 9090. Ридер загружается ~20с после включения. Макс 2 TCP-клиента.</span></span>
     </div>
     <div class="panel-body">
       <div class="connect-row">
@@ -464,10 +229,11 @@
     </div>
   </div>
 
-  <!-- ── READER INFO ────────────────────────────────── -->
+  <!-- ── READER INFO ──────────────────────────────── -->
   <div class="panel collapsed" id="panelInfo">
     <div class="panel-head" onclick="togglePanel('panelInfo')">
       <span class="icon">◈</span> Reader Info
+      <span class="tip">?<span class="tip-text">Текущие параметры ридера (только чтение). Настройка — в панели Configuration ниже.</span></span>
       <span class="badge" id="badgeInfo">—</span>
     </div>
     <div class="panel-body">
@@ -476,59 +242,105 @@
       </div>
       <div style="margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap;">
         <button class="btn" onclick="loadInfo()">Refresh Info</button>
-        <button class="btn" onclick="loadNetwork()">Network</button>
-        <button class="btn" onclick="loadAntennas()">Antennas</button>
-        <button class="btn" onclick="loadTriggers()">Triggers</button>
-        <button class="btn" onclick="loadWiegand()">Wiegand</button>
-        <button class="btn" onclick="loadRS485()">RS485</button>
-        <button class="btn" onclick="loadTags()">Stored Tags</button>
+        <button class="btn" onclick="loadNetwork()">Network <span class="tip">?<span class="tip-text">IP, маска, шлюз, MAC, режим Server/Client.</span></span></button>
+        <button class="btn" onclick="loadAntennas()">Antennas <span class="tip">?<span class="tip-text">Мощность, сессия, протокол для 4 RF портов. C2: 4 порта × MUX = 8 антенн.</span></span></button>
+        <button class="btn" onclick="loadTriggers()">Triggers <span class="tip">?<span class="tip-text">4 GPI входа (оптопара 0-12V). Старт/стоп inventory по внешнему сигналу.</span></span></button>
+        <button class="btn" onclick="loadWiegand()">Wiegand <span class="tip">?<span class="tip-text">Wiegand-26/34/66 выход для СКУД. Импульсы WG0/WG1, интервал 500мс.</span></span></button>
+        <button class="btn" onclick="loadRS485()">RS485 <span class="tip">?<span class="tip-text">RS485 шина для daisy-chain. Адрес в CMD байте (бит 5).</span></span></button>
+        <button class="btn" onclick="loadTags()">Stored Tags <span class="tip">?<span class="tip-text">Метки в SQLite базе ридера. EPC, антенна, PC, TID, время.</span></span></button>
       </div>
     </div>
   </div>
 
-  <!-- ── TIME SYNC ──────────────────────────────────── -->
+  <!-- ── TIME SYNC ────────────────────────────────── -->
   <div class="panel collapsed" id="panelTime">
     <div class="panel-head" onclick="togglePanel('panelTime')">
       <span class="icon">◷</span> Time Sync
+      <span class="tip">?<span class="tip-text">Синхронизация часов ридера с PC. Критично для хронометража — метки содержат timestamp ридера. Drift: зелёный ≤1с, жёлтый ≤10с, красный &gt;10с.</span></span>
       <span class="badge" id="badgeDrift">—</span>
     </div>
     <div class="panel-body">
       <div class="time-row">
-        <div class="time-display">
-          <div class="label">PC Time</div>
-          <div class="clock" id="clockPC">--:--:--</div>
-        </div>
-        <div class="time-display">
-          <div class="label">Reader Time</div>
-          <div class="clock" id="clockReader">--:--:--</div>
-        </div>
-        <div style="text-align: center;">
-          <div class="label" style="font-size:10px;color:var(--text-2);margin-bottom:4px;">DRIFT</div>
-          <div class="drift-indicator" id="driftValue">—</div>
-        </div>
+        <div class="time-display"><div class="label">PC Time</div><div class="clock" id="clockPC">--:--:--</div></div>
+        <div class="time-display"><div class="label">Reader Time</div><div class="clock" id="clockReader">--:--:--</div></div>
+        <div style="text-align:center;"><div class="label" style="font-size:10px;color:var(--text-2);margin-bottom:4px;">DRIFT</div><div class="drift-indicator" id="driftValue">—</div></div>
       </div>
       <div style="margin-top: 12px; display: flex; gap: 8px;">
-        <button class="btn btn-cyan" onclick="syncTime()">SYNC TIME → READER</button>
+        <button class="btn btn-cyan" onclick="syncTime()">SYNC TIME → READER <span class="tip">?<span class="tip-text">Отправляет Unix timestamp PC в ридер (CMD=0x01 SUB=0x10). Точность ±1с.</span></span></button>
         <button class="btn" onclick="loadTime()">Refresh</button>
       </div>
     </div>
   </div>
 
-  <!-- ── CONFIG ─────────────────────────────────────── -->
+  <!-- ── CONFIGURATION ────────────────────────────── -->
   <div class="panel collapsed" id="panelConfig">
     <div class="panel-head" onclick="togglePanel('panelConfig')">
       <span class="icon">⚙</span> Configuration
+      <span class="tip">?<span class="tip-text">Настройки ридера. Применяются мгновенно (кроме IP/DHCP — требует Reboot).</span></span>
     </div>
     <div class="panel-body">
+
+      <!-- Network -->
+      <div class="config-section">
+        <h3>Network <span class="tip">?<span class="tip-text">Сетевые параметры. DHCP — авто IP. Static — ручная настройка. После смены IP нужен Reboot. MAC сохраняется при factory reset.</span></span></h3>
+        <div class="config-row">
+          <label>DHCP</label>
+          <label class="toggle"><input type="checkbox" id="toggleDHCP" onchange="setDHCP(this.checked)"><span class="slider"></span></label>
+          <span id="dhcpLabel" style="font-size:11px;color:var(--text-2);">OFF (Static IP)</span>
+          <span class="tip">?<span class="tip-text">DHCP ON: IP от DHCP сервера. OFF: используются поля ниже. Требуется Reboot.</span></span>
+        </div>
+        <div id="staticIpFields">
+          <div class="config-row">
+            <label>IP Address</label>
+            <input type="text" id="cfgIP" placeholder="192.168.1.116" style="width:150px;">
+          </div>
+          <div class="config-row">
+            <label>Subnet Mask</label>
+            <input type="text" id="cfgMask" placeholder="255.255.255.0" style="width:150px;">
+          </div>
+          <div class="config-row">
+            <label>Gateway</label>
+            <input type="text" id="cfgGW" placeholder="192.168.1.1" style="width:150px;">
+          </div>
+          <div class="config-row">
+            <button class="btn btn-cyan" onclick="applyNetwork()">APPLY NETWORK</button>
+            <button class="btn" onclick="loadNetworkConfig()">LOAD CURRENT</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tag Cache -->
+      <div class="config-section">
+        <h3>Tag Cache <span class="tip">?<span class="tip-text">Единственная дедупликация в железке! RF модуль кэширует повторные чтения одной метки. Без кэша — сотни повторов/сек. Для гонок: 3-5с оптимально.</span></span></h3>
+        <div class="config-row">
+          <label>Enable</label>
+          <label class="toggle"><input type="checkbox" id="toggleCache" onchange="setTagCache(this.checked)"><span class="slider"></span></label>
+          <span id="cacheLabel" style="font-size:11px;color:var(--text-2);">—</span>
+        </div>
+        <div class="config-row">
+          <label>Cache Time</label>
+          <input type="number" id="cfgCacheTime" value="3" min="1" max="255" style="width:70px;">
+          <span style="font-size:11px;color:var(--text-2);">seconds</span>
+          <button class="btn btn-cyan" onclick="setCacheTime()">SET</button>
+          <span class="tip">?<span class="tip-text">После первого чтения метки — игнорировать повторы N секунд (1-255). Для велогонки: 3-5с (время прохождения мимо антенны).</span></span>
+        </div>
+      </div>
+
       <!-- Antennas -->
       <div class="config-section">
-        <h3>Antenna Power</h3>
+        <h3>Antenna Config <span class="tip">?<span class="tip-text">Полная настройка RF портов. Power: 0-33 дБм. Session: S0 (быстрое повторное чтение), S1 (~2с интервал), S2/S3 (долгое). Target: A/B. Q: размер слота (авто=4).</span></span></h3>
         <div id="antennaControls"></div>
       </div>
 
-      <!-- Relay -->
+      <!-- Triggers -->
       <div class="config-section">
-        <h3>Relays</h3>
+        <h3>Trigger / GPI <span class="tip">?<span class="tip-text">4 оптоизолированных входа (0-12V). Управляют стартом/стопом inventory. Start: None, High level, Low level, Edge (фронт). Stop: None, High level, Low level, Timeout.</span></span></h3>
+        <div id="triggerControls"></div>
+      </div>
+
+      <!-- Relays -->
+      <div class="config-section">
+        <h3>Relays <span class="tip">?<span class="tip-text">2 реле (NO). DC 30V/2A, AC 125V/0.3A. Для сирены, светофора, шлагбаума.</span></span></h3>
         <div class="config-row">
           <label>Relay 1</label>
           <button class="btn btn-amber" onclick="fireRelay(1, 1000)">PULSE 1s</button>
@@ -543,19 +355,22 @@
 
       <!-- System -->
       <div class="config-section">
-        <h3>System</h3>
+        <h3>System <span class="tip">?<span class="tip-text">Системные операции. Reboot ~20с. Factory Reset — всё по умолчанию (MAC сохраняется).</span></span></h3>
         <div class="config-row">
-          <button class="btn btn-red" onclick="doReboot()">REBOOT READER</button>
-          <button class="btn" onclick="doClearTags()">CLEAR TAG DB</button>
+          <button class="btn btn-red" onclick="doReboot()">REBOOT <span class="tip">?<span class="tip-text">Перезагрузка ~20с. Нужна после смены IP/DHCP.</span></span></button>
+          <button class="btn btn-red" onclick="doFactoryReset()">FACTORY RESET <span class="tip">?<span class="tip-text">Сброс к заводским. MAC сохраняется. IP → 192.168.1.116. Прошивка в /back_app — восстановима через telnet.</span></span></button>
+          <button class="btn" onclick="doClearTags()">CLEAR TAG DB <span class="tip">?<span class="tip-text">Удаляет все записи из SQLite базы ридера.</span></span></button>
         </div>
       </div>
+
     </div>
   </div>
 
-  <!-- ── INVENTORY ──────────────────────────────────── -->
+  <!-- ── INVENTORY ────────────────────────────────── -->
   <div class="panel" id="panelInventory">
     <div class="panel-head" onclick="togglePanel('panelInventory')">
       <span class="icon">⊛</span> Tag Inventory
+      <span class="tip">?<span class="tip-text">Живой поток меток через WebSocket. EPC — уникальный ID. ANT — антенна. RSSI — уровень сигнала. Дедупликация на клиенте.</span></span>
       <span class="badge" id="badgeTags">0 tags</span>
     </div>
     <div class="panel-body">
@@ -571,30 +386,28 @@
       </div>
       <div class="tag-table-wrap">
         <table>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>EPC</th>
-              <th>ANT</th>
-              <th>RSSI</th>
-              <th>COUNT</th>
-              <th>FIRST SEEN</th>
-              <th>LAST SEEN</th>
-            </tr>
-          </thead>
+          <thead><tr><th>#</th><th>EPC</th><th>ANT</th><th>RSSI</th><th>COUNT</th><th>FIRST SEEN</th><th>LAST SEEN</th></tr></thead>
           <tbody id="tagTableBody"></tbody>
         </table>
       </div>
     </div>
   </div>
 
-  <!-- ── LOG ────────────────────────────────────────── -->
+  <!-- ── LOG ──────────────────────────────────────── -->
   <div class="panel" id="panelLog">
     <div class="panel-head" onclick="togglePanel('panelLog')">
       <span class="icon">▤</span> Log
+      <span class="tip">?<span class="tip-text">Логи в файлы: logs/all.log и logs/warnings.log. Вкладки фильтруют по категории. Protocol — сырые payload hex.</span></span>
       <span class="badge" id="badgeLog">0</span>
     </div>
     <div class="panel-body">
+      <div class="log-tabs">
+        <div class="log-tab active" data-filter="" onclick="setLogTab(this)">All <span class="tab-count" id="cntAll">0</span></div>
+        <div class="log-tab" data-filter="CMD" onclick="setLogTab(this)">Commands <span class="tab-count" id="cntCMD">0</span></div>
+        <div class="log-tab" data-filter="PROTO" onclick="setLogTab(this)">Protocol <span class="tab-count" id="cntPROTO">0</span></div>
+        <div class="log-tab" data-filter="TAG" onclick="setLogTab(this)">Tags <span class="tab-count" id="cntTAG">0</span></div>
+        <div class="log-tab" data-filter="WARNING,ERROR" onclick="setLogTab(this)">Warnings <span class="tab-count" id="cntWARN">0</span></div>
+      </div>
       <div class="log-output" id="logOutput"></div>
     </div>
   </div>
@@ -605,468 +418,377 @@
 // ═══════════════════════════════════════════════════════════════════════════
 // State
 // ═══════════════════════════════════════════════════════════════════════════
-
-let connected = false;
-let ws = null;
-let inventoryRunning = false;
-let tagMap = {};       // EPC → { count, firstSeen, lastSeen, ant, rssi, row }
-let totalReads = 0;
-let uniqueCount = 0;
-let rateWindow = [];   // timestamps for rate calc
-let logCount = 0;
-let pcClockInterval = null;
-
-const API = '';  // same origin
+let connected = false, ws = null, inventoryRunning = false;
+let tagMap = {}, totalReads = 0, uniqueCount = 0, rateWindow = [], pcClockInterval = null;
+let logEntries = [], activeLogFilter = '', logCounts = { all:0, CMD:0, PROTO:0, TAG:0, WARN:0 };
+let serverLogPollTimer = null, lastServerLogTotal = 0;
+const API = '';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Utilities
 // ═══════════════════════════════════════════════════════════════════════════
-
 function $(id) { return document.getElementById(id); }
-
-function togglePanel(id) {
-  $(id).classList.toggle('collapsed');
-}
-
-function log(msg, cls = '') {
-  const el = $('logOutput');
-  const ts = new Date().toLocaleTimeString('en-GB', { hour12: false });
-  const line = document.createElement('div');
-  line.className = 'log-line';
-  line.innerHTML = `<span class="ts">[${ts}]</span> <span class="${cls}">${escHtml(msg)}</span>`;
-  el.appendChild(line);
-  el.scrollTop = el.scrollHeight;
-  logCount++;
-  $('badgeLog').textContent = logCount;
-}
-
-function escHtml(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
-function fmtTime(ts) {
-  if (!ts) return '—';
-  const d = new Date(ts * 1000);
-  return d.toLocaleTimeString('en-GB', { hour12: false });
-}
-
-function fmtTimeFull(ts) {
-  if (!ts) return '—';
-  const d = new Date(ts * 1000);
-  return d.toLocaleString('en-GB', { hour12: false });
-}
+function togglePanel(id) { $(id).classList.toggle('collapsed'); }
+function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function fmtTime(ts) { if (!ts) return '—'; return new Date(ts*1000).toLocaleTimeString('en-GB',{hour12:false}); }
 
 async function api(method, path, body) {
   try {
-    const opts = { method, headers: { 'Content-Type': 'application/json' } };
+    const opts = { method, headers: {'Content-Type':'application/json'} };
     if (body) opts.body = JSON.stringify(body);
-    const res = await fetch(API + path, opts);
+    const res = await fetch(API+path, opts);
     const data = await res.json();
-    if (!res.ok) {
-      throw new Error(data.detail || `HTTP ${res.status}`);
-    }
+    if (!res.ok) throw new Error(data.detail || `HTTP ${res.status}`);
     return data;
-  } catch (e) {
-    log(`API error: ${path} — ${e.message}`, 'err');
-    throw e;
-  }
+  } catch(e) { clientLog(`API error: ${path} — ${e.message}`, 'err', 'SYS'); throw e; }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Log System — client + server polling with tabs
+// ═══════════════════════════════════════════════════════════════════════════
+function clientLog(msg, cls='', cat='SYS') {
+  const ts = new Date().toLocaleTimeString('en-GB',{hour12:false});
+  const level = cls==='err'?'ERROR':cls==='warn'?'WARNING':cls==='ok'?'INFO':'DEBUG';
+  addLogEntry({ts, level, msg, cat, cls});
+}
+
+function addLogEntry(e) {
+  if (!e.cls) e.cls = e.level==='ERROR'?'err':e.level==='WARNING'?'warn':e.cat==='CMD'?'ok':e.cat==='PROTO'?'proto':'info';
+  logEntries.push(e);
+  logCounts.all++;
+  if (e.cat==='CMD') logCounts.CMD++;
+  if (e.cat==='PROTO') logCounts.PROTO++;
+  if (e.cat==='TAG') logCounts.TAG++;
+  if (e.level==='WARNING'||e.level==='ERROR') logCounts.WARN++;
+  $('cntAll').textContent=logCounts.all; $('cntCMD').textContent=logCounts.CMD;
+  $('cntPROTO').textContent=logCounts.PROTO; $('cntTAG').textContent=logCounts.TAG;
+  $('cntWARN').textContent=logCounts.WARN; $('badgeLog').textContent=logCounts.all;
+  if (matchesFilter(e)) appendLogLine(e);
+}
+
+function matchesFilter(e) {
+  if (!activeLogFilter) return true;
+  const f=activeLogFilter.split(',');
+  return f.includes(e.cat)||f.includes(e.level);
+}
+
+function appendLogLine(e) {
+  const el=$('logOutput'), line=document.createElement('div');
+  line.className='log-line';
+  line.innerHTML=`<span class="ts">[${e.ts}]</span> <span style="color:var(--text-2)">[${e.cat}]</span> <span class="${e.cls}">${escHtml(e.msg)}</span>`;
+  el.appendChild(line); el.scrollTop=el.scrollHeight;
+}
+
+function setLogTab(t) {
+  document.querySelectorAll('.log-tab').forEach(x=>x.classList.remove('active'));
+  t.classList.add('active'); activeLogFilter=t.dataset.filter; rerenderLog();
+}
+
+function rerenderLog() {
+  const el=$('logOutput'); el.innerHTML='';
+  logEntries.filter(matchesFilter).slice(-500).forEach(appendLogLine);
+}
+
+function startLogPolling() {
+  if (serverLogPollTimer) clearInterval(serverLogPollTimer);
+  serverLogPollTimer = setInterval(pollServerLogs, 2000);
+}
+
+async function pollServerLogs() {
+  if (!connected) return;
+  try {
+    const d = await fetch(`/api/logs?after=${lastServerLogTotal}`).then(r=>r.json());
+    if (d.logs) d.logs.forEach(e => { if (e.cat!=='SYS') addLogEntry(e); });
+    lastServerLogTotal = d.total;
+  } catch(e) {}
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Connection
 // ═══════════════════════════════════════════════════════════════════════════
-
-function setConnected(state) {
-  connected = state;
-  $('statusDot').className = 'status-dot' + (state ? ' on' : '');
-  $('statusText').textContent = state ? 'Connected' : 'Disconnected';
-  $('btnConnect').disabled = state;
-  $('btnDisconnect').disabled = !state;
-  $('btnStart').disabled = !state;
-
-  if (state) {
-    $('panelInfo').classList.remove('collapsed');
-    $('panelTime').classList.remove('collapsed');
-    $('panelConfig').classList.remove('collapsed');
-  }
+function setConnected(s) {
+  connected=s;
+  $('statusDot').className='status-dot'+(s?' on':'');
+  $('statusText').textContent=s?'Connected':'Disconnected';
+  $('btnConnect').disabled=s; $('btnDisconnect').disabled=!s; $('btnStart').disabled=!s;
+  if (s) { $('panelInfo').classList.remove('collapsed'); $('panelTime').classList.remove('collapsed'); $('panelConfig').classList.remove('collapsed'); startLogPolling(); }
 }
 
 async function doConnect() {
-  const ip = $('inputIP').value.trim();
-  const port = parseInt($('inputPort').value) || 9090;
-  if (!ip) { log('Enter IP address', 'warn'); return; }
-
-  $('btnConnect').disabled = true;
-  log(`Connecting to ${ip}:${port}...`, 'info');
-
+  const ip=$('inputIP').value.trim(), port=parseInt($('inputPort').value)||9090;
+  if (!ip) { clientLog('Enter IP','warn'); return; }
+  $('btnConnect').disabled=true;
+  clientLog(`Connecting to ${ip}:${port}...`,'info');
   try {
-    await api('POST', '/api/connect', { ip, port });
-    setConnected(true);
-    log(`Connected to ${ip}:${port}`, 'ok');
-
-    // Auto-load basic info
-    await loadInfo();
-    await loadTime();
-    await loadAntennaControls();
-  } catch (e) {
-    setConnected(false);
-    $('btnConnect').disabled = false;
-  }
+    await api('POST','/api/connect',{ip,port}); setConnected(true);
+    clientLog(`Connected to ${ip}:${port}`,'ok','CMD');
+    await loadInfo(); await loadTime(); await loadAntennaControls(); await loadTriggerControls(); await loadNetworkConfig(); await loadCacheConfig();
+  } catch(e) { setConnected(false); $('btnConnect').disabled=false; }
 }
 
 async function doDisconnect() {
   if (inventoryRunning) stopInventory();
-  try {
-    await api('POST', '/api/disconnect');
-  } catch(e) {}
-  setConnected(false);
-  log('Disconnected', 'warn');
+  try { await api('POST','/api/disconnect'); } catch(e) {}
+  setConnected(false); clientLog('Disconnected','warn');
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Reader Info
 // ═══════════════════════════════════════════════════════════════════════════
-
 async function loadInfo() {
   try {
-    const info = await api('GET', '/api/info');
-    const grid = $('infoGrid');
-    grid.innerHTML = '';
-    for (const [key, val] of Object.entries(info)) {
-      const cell = document.createElement('div');
-      cell.className = 'info-cell';
-      cell.innerHTML = `<div class="label">${escHtml(key)}</div><div class="value">${escHtml(String(val))}</div>`;
-      grid.appendChild(cell);
-    }
-    $('badgeInfo').textContent = info.model || 'OK';
-    log('Reader info loaded', 'ok');
+    const info = await api('GET','/api/info');
+    showInfoOverlay('Reader Info', info);
+    $('badgeInfo').textContent=info.reader_name||'OK';
+    clientLog('Reader info loaded','ok','CMD');
   } catch(e) {}
 }
 
-async function loadNetwork() {
-  try {
-    const info = await api('GET', '/api/network');
-    const mac = await api('GET', '/api/mac');
-    const srv = await api('GET', '/api/server');
-    const all = { ...info, ...mac, ...srv };
-    showInfoOverlay('Network', all);
-  } catch(e) {}
-}
+async function loadNetwork() { try { const a=await api('GET','/api/network'), b=await api('GET','/api/mac'), c=await api('GET','/api/server'); showInfoOverlay('Network',{...a,...b,...c}); } catch(e) {} }
+async function loadAntennas() { try { showInfoOverlay('Antennas',await api('GET','/api/antennas')); } catch(e) {} }
+async function loadTriggers() { try { showInfoOverlay('Triggers',await api('GET','/api/triggers')); } catch(e) {} }
+async function loadWiegand() { try { showInfoOverlay('Wiegand',await api('GET','/api/wiegand')); } catch(e) {} }
+async function loadRS485() { try { showInfoOverlay('RS485',await api('GET','/api/rs485')); } catch(e) {} }
+async function loadTags() { try { showInfoOverlay('Stored Tags',await api('GET','/api/tags')); } catch(e) {} }
 
-async function loadAntennas() {
-  try {
-    const data = await api('GET', '/api/antennas');
-    showInfoOverlay('Antennas', data);
-  } catch(e) {}
-}
+// Field tooltips and human-readable labels
+const FIELD_INFO = {
+  // Network
+  ip: ['IP Address', 'Текущий IP адрес ридера'],
+  mask: ['Subnet Mask', 'Маска подсети'],
+  gateway: ['Gateway', 'Шлюз по умолчанию'],
+  mac: ['MAC Address', 'Аппаратный адрес (сохраняется при factory reset)'],
+  mode: ['Server/Client', 'SERVER: ридер слушает подключения. CLIENT: ридер подключается к серверу'],
+  // Antenna
+  antenna_index: ['Antenna Index', 'Индекс RF порта (0-3)'],
+  power_dbm: ['Power (dBm)', 'Мощность передатчика. 0-33 дБм. Больше = дальше читает'],
+  protocol: ['Protocol', 'Протокол обмена с метками (0x10 = ISO 18000-6C / EPC Gen2)'],
+  frequency: ['Frequency', 'Частотный регион (0x00=авто, 0x01=FCC, 0x02=ETSI, 0x10=CN dual)'],
+  session: ['Session', 'S0: быстрое повторное чтение. S1: ~2с пауза. S2/S3: долгая пауза'],
+  target: ['Target', 'A или B — переключение флага тега при чтении'],
+  q_value: ['Q Value', 'Размер слота для антиколлизии. 4 = авто. Больше Q = больше меток одновременно, но медленнее'],
+  // Trigger
+  start_mode: ['Start Mode', 'None — выключен, High — по высокому уровню, Low — по низкому, Edge — по фронту (переключению)'],
+  stop_mode: ['Stop Mode', 'None — выключен, High — по высокому уровню, Low — по низкому, Timeout — по истечении времени (Delay)'],
+  delay_10ms: ['Delay', 'Задержка/таймаут в единицах ×10мс (напр. 100 = 1 секунда)'],
+  // Wiegand
+  wiegand_enable: ['Wiegand Enable', '1=включён, 0=выключен'],
+  wiegand_format: ['Format', 'Wiegand-26 (24 бита), 34 (32), 66 (64)'],
+  wiegand_bits: ['Data Bits', 'Количество бит данных в кадре'],
+  // RS485
+  rs485_addr: ['RS485 Address', 'Адрес устройства на шине (0-255)'],
+  rs485_mode: ['RS485 Mode', 'Режим работы RS485'],
+  // Tag cache
+  cache_enabled: ['Cache Enabled', 'Дедупликация на RF модуле — фильтрует повторные чтения одной метки'],
+  cache_time: ['Cache Time (s)', 'Сколько секунд игнорировать повтор метки'],
+  // System
+  reader_info: ['Reader Info', 'Внутренний идентификатор модели (HEX)'],
+  reader_name: ['Reader Name', 'Имя ридера (прошивка + дата)'],
+  // Relay
+  relays: ['Relays', 'Состояние реле: ON/OFF'],
+  // GPI
+  inputs: ['GPI Inputs', 'Уровни входов: HIGH (есть сигнал) / LOW (нет)'],
+};
 
-async function loadTriggers() {
-  try {
-    const data = await api('GET', '/api/triggers');
-    showInfoOverlay('Triggers', data);
-  } catch(e) {}
-}
-
-async function loadWiegand() {
-  try {
-    const data = await api('GET', '/api/wiegand');
-    showInfoOverlay('Wiegand', data);
-  } catch(e) {}
-}
-
-async function loadRS485() {
-  try {
-    const data = await api('GET', '/api/rs485');
-    showInfoOverlay('RS485', data);
-  } catch(e) {}
-}
-
-async function loadTags() {
-  try {
-    const data = await api('GET', '/api/tags');
-    showInfoOverlay('Stored Tags', data);
-  } catch(e) {}
-}
+// Fields to hide when human-readable alternatives exist
+const RAW_FIELDS = new Set(['cmd','sub','payload_hex','payload_len','sub_cmd']);
 
 function showInfoOverlay(title, data) {
-  const grid = $('infoGrid');
-  grid.innerHTML = '';
+  const g=$('infoGrid'); g.innerHTML='';
+  (function render(obj,pfx='') {
+    for (const [k,v] of Object.entries(obj)) {
+      // Skip raw protocol fields if enriched data exists
+      if (RAW_FIELDS.has(k) && Object.keys(obj).some(f => !RAW_FIELDS.has(f) && f !== k)) continue;
+      if (typeof v==='object'&&v!==null&&!Array.isArray(v)) { render(v,pfx+k+'.'); continue; }
 
-  function renderObj(obj, prefix = '') {
-    for (const [key, val] of Object.entries(obj)) {
-      if (typeof val === 'object' && val !== null && !Array.isArray(val)) {
-        renderObj(val, prefix + key + '.');
-      } else {
-        const cell = document.createElement('div');
-        cell.className = 'info-cell';
-        cell.innerHTML = `<div class="label">${escHtml(prefix + key)}</div><div class="value">${escHtml(String(val))}</div>`;
-        grid.appendChild(cell);
-      }
+      const fieldKey = k;
+      const info = FIELD_INFO[fieldKey] || FIELD_INFO[k.split('.').pop()];
+      const displayLabel = info ? info[0] : k;
+      // Pretty prefix: ports.port_0 → Port 0, triggers.gpi_0 → GPI 0
+      let prettyPfx = pfx.replace(/\.$/,'').replace(/^ports\.port_/,'Port ').replace(/^triggers\.gpi_/,'GPI ');
+      const label = prettyPfx ? `${prettyPfx} › ${displayLabel}` : displayLabel;
+      const tip = info ? info[1] : '';
+
+      const c=document.createElement('div'); c.className='info-cell';
+      c.innerHTML=`<div class="label">${escHtml(label)}${tip ? ` <span class="tip" style="display:inline-flex;width:14px;height:14px;font-size:9px;">?<span class="tip-text">${escHtml(tip)}</span></span>` : ''}</div><div class="value">${escHtml(String(v))}</div>`;
+      g.appendChild(c);
     }
-  }
-
-  renderObj(data);
-  $('badgeInfo').textContent = title;
-  $('panelInfo').classList.remove('collapsed');
-  log(`Loaded: ${title}`, 'info');
+  })(data);
+  $('badgeInfo').textContent=title; $('panelInfo').classList.remove('collapsed');
+  clientLog(`Loaded: ${title}`,'info','CMD');
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Time
 // ═══════════════════════════════════════════════════════════════════════════
-
-function startPCClock() {
-  if (pcClockInterval) clearInterval(pcClockInterval);
-  pcClockInterval = setInterval(() => {
-    $('clockPC').textContent = new Date().toLocaleTimeString('en-GB', { hour12: false });
-  }, 200);
-}
-startPCClock();
+(function startPCClock() { if(pcClockInterval)clearInterval(pcClockInterval); pcClockInterval=setInterval(()=>{$('clockPC').textContent=new Date().toLocaleTimeString('en-GB',{hour12:false});},200); })();
 
 async function loadTime() {
   try {
-    const data = await api('GET', '/api/time');
-    if (data.reader_time_str) {
-      $('clockReader').textContent = data.reader_time_str;
+    const d=await api('GET','/api/time');
+    if (d.reader_time_str) $('clockReader').textContent=d.reader_time_str;
+    if (d.drift_seconds!==undefined) {
+      const dr=d.drift_seconds, abs=Math.abs(dr), sign=dr>=0?'+':'';
+      $('driftValue').textContent=`${sign}${dr}s`; $('badgeDrift').textContent=`${sign}${dr}s`;
+      $('driftValue').className='drift-indicator '+(abs<=1?'drift-ok':abs<=10?'drift-warn':'drift-bad');
     }
-    if (data.drift_seconds !== undefined) {
-      const d = data.drift_seconds;
-      const abs = Math.abs(d);
-      const sign = d >= 0 ? '+' : '';
-      $('driftValue').textContent = `${sign}${d}s`;
-      $('badgeDrift').textContent = `${sign}${d}s`;
-
-      if (abs <= 1) {
-        $('driftValue').className = 'drift-indicator drift-ok';
-      } else if (abs <= 10) {
-        $('driftValue').className = 'drift-indicator drift-warn';
-      } else {
-        $('driftValue').className = 'drift-indicator drift-bad';
-      }
-    }
-    log(`Reader time: ${data.reader_time_str || '?'}, drift: ${data.drift_seconds || '?'}s`, 'info');
+    clientLog(`Reader time: ${d.reader_time_str||'?'}, drift: ${d.drift_seconds||'?'}s`,'info','CMD');
   } catch(e) {}
 }
 
-async function syncTime() {
-  try {
-    const result = await api('POST', '/api/settime', {});
-    log('Time synced to reader', 'ok');
-    setTimeout(loadTime, 500);
-  } catch(e) {}
+async function syncTime() { try { await api('POST','/api/settime',{}); clientLog('Time synced','ok','CMD'); setTimeout(loadTime,500); } catch(e) {} }
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Config — Network
+// ═══════════════════════════════════════════════════════════════════════════
+async function loadNetworkConfig() {
+  try { const n=await api('GET','/api/network'); if(n.ip)$('cfgIP').value=n.ip; if(n.mask)$('cfgMask').value=n.mask; if(n.gateway)$('cfgGW').value=n.gateway; clientLog(`Network: ${n.ip||'?'}`,'info','CMD'); } catch(e) {}
+}
+
+async function setDHCP(on) {
+  $('dhcpLabel').textContent=on?'ON (Auto IP)':'OFF (Static IP)';
+  $('staticIpFields').style.opacity=on?'0.4':'1'; $('staticIpFields').style.pointerEvents=on?'none':'auto';
+  try { await api('POST','/api/setdhcp',{enable:on?1:0}); clientLog(`DHCP ${on?'ON':'OFF'} — reboot to apply`,on?'ok':'warn','CMD'); } catch(e) {}
+}
+
+async function applyNetwork() {
+  const ip=$('cfgIP').value.trim(), mask=$('cfgMask').value.trim(), gw=$('cfgGW').value.trim();
+  if (!ip||!mask||!gw) { clientLog('Fill all network fields','warn'); return; }
+  const re=/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/;
+  if (!re.test(ip)||!re.test(mask)||!re.test(gw)) { clientLog('Invalid IP format','err'); return; }
+  try { await api('POST','/api/setip',{ip,mask,gateway:gw}); clientLog(`Network: ${ip} — reboot to apply`,'ok','CMD'); } catch(e) {}
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// Config — Antenna Power Controls
+// Config — Tag Cache
 // ═══════════════════════════════════════════════════════════════════════════
+async function loadCacheConfig() {
+  try { const c=await api('GET','/api/tagcache'); $('toggleCache').checked=!!c.cache_enabled; $('cacheLabel').textContent=c.cache_enabled?'ON':'OFF'; } catch(e) {}
+  try { const t=await api('GET','/api/tagtime'); if(t.cache_time!==undefined)$('cfgCacheTime').value=t.cache_time; } catch(e) {}
+}
 
+async function setTagCache(on) {
+  $('cacheLabel').textContent=on?'ON':'OFF';
+  try { await api('POST','/api/settagcache',{enable:on?1:0}); clientLog(`Tag cache ${on?'ON':'OFF'}`,on?'ok':'warn','CMD'); } catch(e) {}
+}
+
+async function setCacheTime() {
+  const t=parseInt($('cfgCacheTime').value)||3;
+  try { await api('POST','/api/settagcachetime',{cache_time:t}); clientLog(`Cache time: ${t}s`,'ok','CMD'); } catch(e) {}
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Config — Antennas (power + session + target + Q)
+// ═══════════════════════════════════════════════════════════════════════════
 async function loadAntennaControls() {
-  const container = $('antennaControls');
-  container.innerHTML = '';
-
+  const c=$('antennaControls'); c.innerHTML='';
   try {
-    const data = await api('GET', '/api/antennas');
-    const ports = data.ports || data;
-
-    for (let i = 0; i < 4; i++) {
-      const portData = ports[`port_${i}`] || ports[i] || {};
-      const power = portData.power_dbm || portData.power || 26;
-
-      const row = document.createElement('div');
-      row.className = 'config-row';
-      row.innerHTML = `
-        <label>Port ${i}</label>
-        <input type="range" min="0" max="33" value="${power}" id="slider_ant_${i}"
-               style="width:120px;accent-color:var(--amber);"
-               oninput="$('val_ant_${i}').textContent=this.value+'dBm'">
-        <span id="val_ant_${i}" style="color:var(--amber);min-width:50px;">${power}dBm</span>
-        <button class="btn btn-amber" onclick="setPower(${i})">SET</button>
-      `;
-      container.appendChild(row);
+    const data=await api('GET','/api/antennas'), ports=data.ports||{};
+    for (let i=0;i<4;i++) {
+      const p=ports[`port_${i}`]||{}, pw=p.power_dbm||26;
+      const si={'S0':0,'S1':1,'S2':2,'S3':3}[p.session]??2, ti={'A':0,'B':1}[p.target]??0, q=p.q_value??4;
+      const d=document.createElement('div');
+      d.style.cssText='background:var(--bg-0);border:1px solid var(--border);border-radius:4px;padding:10px 14px;margin-bottom:8px;';
+      d.innerHTML=`
+        <div style="font-size:11px;color:var(--amber);font-weight:600;margin-bottom:6px;">PORT ${i} (ANT${i*2+1}/ANT${i*2+2})</div>
+        <div class="config-row">
+          <label>Power</label>
+          <input type="range" min="0" max="33" value="${pw}" id="slider_ant_${i}" style="width:120px;accent-color:var(--amber);" oninput="$('val_ant_${i}').textContent=this.value+'dBm'">
+          <span id="val_ant_${i}" style="color:var(--amber);min-width:50px;">${pw}dBm</span>
+        </div>
+        <div class="config-row">
+          <label>Session</label>
+          <select id="sess_${i}"><option value="0" ${si==0?'selected':''}>S0</option><option value="1" ${si==1?'selected':''}>S1</option><option value="2" ${si==2?'selected':''}>S2</option><option value="3" ${si==3?'selected':''}>S3</option></select>
+          <label style="min-width:50px;">Target</label>
+          <select id="tgt_${i}"><option value="0" ${ti==0?'selected':''}>A</option><option value="1" ${ti==1?'selected':''}>B</option></select>
+          <label style="min-width:20px;">Q</label>
+          <input type="number" id="qval_${i}" value="${q}" min="0" max="15" style="width:55px;">
+        </div>
+        <div class="config-row"><button class="btn btn-amber" onclick="setFullAntenna(${i})">APPLY PORT ${i}</button></div>`;
+      c.appendChild(d);
     }
-  } catch(e) {
-    container.innerHTML = '<div style="color:var(--text-2)">Load antennas after connecting</div>';
-  }
+  } catch(e) { c.innerHTML='<div style="color:var(--text-2)">Connect first</div>'; }
 }
 
-async function setPower(port) {
-  const power = parseInt($(`slider_ant_${port}`).value);
-  try {
-    await api('POST', '/api/setpower', { port, power_dbm: power });
-    log(`Antenna ${port} power set to ${power} dBm`, 'ok');
-  } catch(e) {}
-}
-
-async function fireRelay(num, ms) {
-  try {
-    await api('POST', '/api/setrelay', { relay_num: num, on_time_ms: ms });
-    log(`Relay ${num} pulsed for ${ms}ms`, 'ok');
-  } catch(e) {}
-}
-
-async function doReboot() {
-  if (!confirm('Reboot reader? Connection will be lost.')) return;
-  try {
-    await api('POST', '/api/reboot');
-    log('Reader rebooting (~20s)...', 'warn');
-    setConnected(false);
-  } catch(e) {}
-}
-
-async function doClearTags() {
-  try {
-    await api('POST', '/api/cleartags');
-    log('Tag database cleared', 'ok');
-  } catch(e) {}
+async function setFullAntenna(p) {
+  const pw=parseInt($(`slider_ant_${p}`).value), s=parseInt($(`sess_${p}`).value), t=parseInt($(`tgt_${p}`).value), q=parseInt($(`qval_${p}`).value)||4;
+  try { await api('POST','/api/setantenna',{port:p,power:pw,session:s,target:t,q_value:q}); clientLog(`Port ${p}: ${pw}dBm S${s} ${t?'B':'A'} Q=${q}`,'ok','CMD'); } catch(e) {}
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// Inventory — WebSocket Tag Stream
+// Config — Triggers
 // ═══════════════════════════════════════════════════════════════════════════
+async function loadTriggerControls() {
+  const c=$('triggerControls'); c.innerHTML='';
+  const sm=['None','High','Low','Edge'], stm=['None','High','Low','Timeout'];
+  try {
+    const data=await api('GET','/api/triggers'), trigs=data.triggers||{};
+    for (let i=0;i<4;i++) {
+      const d=document.createElement('div');
+      d.style.cssText='background:var(--bg-0);border:1px solid var(--border);border-radius:4px;padding:10px 14px;margin-bottom:8px;';
+      d.innerHTML=`
+        <div style="font-size:11px;color:var(--cyan);font-weight:600;margin-bottom:6px;">GPI ${i+1}</div>
+        <div class="config-row">
+          <label>Start</label>
+          <select id="trig_start_${i}">${sm.map((m,j)=>`<option value="${j}">${m}</option>`).join('')}</select>
+          <label style="min-width:40px;">Stop</label>
+          <select id="trig_stop_${i}">${stm.map((m,j)=>`<option value="${j}">${m}</option>`).join('')}</select>
+          <label style="min-width:50px;">Delay</label>
+          <input type="number" id="trig_delay_${i}" value="0" min="0" max="65535" style="width:70px;">
+          <span style="font-size:10px;color:var(--text-2);">×10ms</span>
+          <button class="btn btn-cyan" onclick="setTrigger(${i})">SET</button>
+        </div>`;
+      c.appendChild(d);
+    }
+  } catch(e) { c.innerHTML='<div style="color:var(--text-2)">Connect first</div>'; }
+}
 
+async function setTrigger(g) {
+  const s=parseInt($(`trig_start_${g}`).value), st=parseInt($(`trig_stop_${g}`).value), dl=parseInt($(`trig_delay_${g}`).value)||0;
+  try { await api('POST','/api/settrigger',{gpi_pin:g,start_mode:s,stop_mode:st,delay_10ms:dl}); clientLog(`GPI${g+1}: start=${s} stop=${st} delay=${dl*10}ms`,'ok','CMD'); } catch(e) {}
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Relays & System
+// ═══════════════════════════════════════════════════════════════════════════
+async function fireRelay(n,ms) { try { await api('POST','/api/setrelay',{relay_num:n,on_time_ms:ms}); clientLog(`Relay ${n} pulse ${ms}ms`,'ok','CMD'); } catch(e) {} }
+async function doReboot() { if(!confirm('Reboot reader?'))return; try{await api('POST','/api/reboot');clientLog('Rebooting ~20s...','warn','CMD');setConnected(false);}catch(e){} }
+async function doFactoryReset() { if(!confirm('FACTORY RESET?\n\nAll settings → defaults.\nMAC preserved. IP → 192.168.1.116.\n\nProceed?'))return; try{await api('POST','/api/factoryreset');clientLog('Factory reset — rebooting','warn','CMD');setConnected(false);}catch(e){} }
+async function doClearTags() { try{await api('POST','/api/cleartags');clientLog('Tag DB cleared','ok','CMD');}catch(e){} }
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Inventory — WebSocket
+// ═══════════════════════════════════════════════════════════════════════════
 function startInventory() {
-  if (!connected || inventoryRunning) return;
-
-  const wsProto = location.protocol === 'https:' ? 'wss:' : 'ws:';
-  const wsUrl = `${wsProto}//${location.host}/ws/inventory`;
-
-  ws = new WebSocket(wsUrl);
-  ws.onopen = () => {
-    inventoryRunning = true;
-    $('btnStart').disabled = true;
-    $('btnStop').disabled = false;
-    ws.send(JSON.stringify({ action: 'start' }));
-    log('Inventory started', 'ok');
-  };
-
-  ws.onmessage = (event) => {
-    const data = JSON.parse(event.data);
-
-    if (data.error) {
-      log(`Inventory error: ${data.error}`, 'err');
-      return;
-    }
-
-    if (data.status) {
-      log(`Inventory: ${data.status}`, 'info');
-      return;
-    }
-
-    if (data.type === 'tag') {
-      processTag(data);
-    }
-  };
-
-  ws.onclose = () => {
-    inventoryRunning = false;
-    $('btnStart').disabled = !connected;
-    $('btnStop').disabled = true;
-    log('Inventory WebSocket closed', 'warn');
-  };
-
-  ws.onerror = (e) => {
-    log('Inventory WebSocket error', 'err');
-  };
+  if(!connected||inventoryRunning)return;
+  ws=new WebSocket(`${location.protocol==='https:'?'wss:':'ws:'}//${location.host}/ws/inventory`);
+  ws.onopen=()=>{ inventoryRunning=true;$('btnStart').disabled=true;$('btnStop').disabled=false;ws.send(JSON.stringify({action:'start'}));clientLog('Inventory started','ok','CMD'); };
+  ws.onmessage=(ev)=>{ const d=JSON.parse(ev.data); if(d.error){clientLog(d.error,'err');return;} if(d.status){clientLog(d.status,'info','CMD');return;} if(d.type==='tag')processTag(d); };
+  ws.onclose=()=>{ inventoryRunning=false;$('btnStart').disabled=!connected;$('btnStop').disabled=true;clientLog('Inventory stopped','warn','CMD'); };
+  ws.onerror=()=>clientLog('WS error','err');
 }
 
 function stopInventory() {
-  if (ws && ws.readyState === WebSocket.OPEN) {
-    ws.send(JSON.stringify({ action: 'stop' }));
-  }
-  inventoryRunning = false;
-  $('btnStart').disabled = !connected;
-  $('btnStop').disabled = true;
+  if(ws&&ws.readyState===WebSocket.OPEN)ws.send(JSON.stringify({action:'stop'}));
+  inventoryRunning=false;$('btnStart').disabled=!connected;$('btnStop').disabled=true;
 }
 
-function processTag(data) {
-  const epc = data.epc || data.raw_hex || '?';
-  const now = data.timestamp || Date.now() / 1000;
-
-  totalReads++;
-
-  // Rate calc
-  rateWindow.push(now);
-  while (rateWindow.length > 0 && rateWindow[0] < now - 1) rateWindow.shift();
-
-  if (tagMap[epc]) {
-    // Existing tag
-    const t = tagMap[epc];
-    t.count++;
-    t.lastSeen = now;
-    t.ant = data.antenna || data.ant_num || t.ant;
-    t.rssi = data.rssi || t.rssi;
-    updateTagRow(epc);
-  } else {
-    // New tag
-    uniqueCount++;
-    tagMap[epc] = {
-      count: 1,
-      firstSeen: now,
-      lastSeen: now,
-      ant: data.antenna || data.ant_num || '?',
-      rssi: data.rssi || '—',
-    };
-    addTagRow(epc);
-  }
-
-  // Update stats
-  $('statTotal').textContent = totalReads;
-  $('statUnique').textContent = uniqueCount;
-  $('statRate').textContent = rateWindow.length;
-  $('badgeTags').textContent = `${uniqueCount} tags`;
+function processTag(d) {
+  const epc=d.epc||d.raw_hex||'?', now=d.timestamp||Date.now()/1000;
+  totalReads++; rateWindow.push(now);
+  while(rateWindow.length>0&&rateWindow[0]<now-1)rateWindow.shift();
+  if(tagMap[epc]){const t=tagMap[epc];t.count++;t.lastSeen=now;t.ant=d.antenna||d.ant_num||t.ant;t.rssi=d.rssi||t.rssi;updateTagRow(epc);}
+  else{uniqueCount++;tagMap[epc]={count:1,firstSeen:now,lastSeen:now,ant:d.antenna||d.ant_num||'?',rssi:d.rssi||'—'};addTagRow(epc);}
+  $('statTotal').textContent=totalReads;$('statUnique').textContent=uniqueCount;$('statRate').textContent=rateWindow.length;$('badgeTags').textContent=`${uniqueCount} tags`;
 }
 
-function addTagRow(epc) {
-  const tbody = $('tagTableBody');
-  const t = tagMap[epc];
-  const row = document.createElement('tr');
-  row.className = 'new-tag';
-  row.id = 'tag_' + epc;
-  row.innerHTML = `
-    <td>${uniqueCount}</td>
-    <td class="epc-cell">${escHtml(epc)}</td>
-    <td class="ant-cell">${t.ant}</td>
-    <td>${t.rssi}</td>
-    <td id="cnt_${epc}">${t.count}</td>
-    <td>${fmtTime(t.firstSeen)}</td>
-    <td id="last_${epc}">${fmtTime(t.lastSeen)}</td>
-  `;
-  tbody.insertBefore(row, tbody.firstChild);
-}
-
-function updateTagRow(epc) {
-  const t = tagMap[epc];
-  const cnt = document.getElementById('cnt_' + epc);
-  const last = document.getElementById('last_' + epc);
-  if (cnt) cnt.textContent = t.count;
-  if (last) last.textContent = fmtTime(t.lastSeen);
-
-  const row = document.getElementById('tag_' + epc);
-  if (row) {
-    row.className = 'new-tag';
-    setTimeout(() => { row.className = ''; }, 600);
-  }
-}
-
-function clearTagTable() {
-  $('tagTableBody').innerHTML = '';
-  tagMap = {};
-  totalReads = 0;
-  uniqueCount = 0;
-  rateWindow = [];
-  $('statTotal').textContent = '0';
-  $('statUnique').textContent = '0';
-  $('statRate').textContent = '0';
-  $('badgeTags').textContent = '0 tags';
-}
+function addTagRow(epc){const t=tagMap[epc],r=document.createElement('tr');r.className='new-tag';r.id='tag_'+epc;r.innerHTML=`<td>${uniqueCount}</td><td class="epc-cell">${escHtml(epc)}</td><td class="ant-cell">${t.ant}</td><td>${t.rssi}</td><td id="cnt_${epc}">${t.count}</td><td>${fmtTime(t.firstSeen)}</td><td id="last_${epc}">${fmtTime(t.lastSeen)}</td>`;$('tagTableBody').insertBefore(r,$('tagTableBody').firstChild);}
+function updateTagRow(epc){const t=tagMap[epc];const c=document.getElementById('cnt_'+epc),l=document.getElementById('last_'+epc);if(c)c.textContent=t.count;if(l)l.textContent=fmtTime(t.lastSeen);const r=document.getElementById('tag_'+epc);if(r){r.className='new-tag';setTimeout(()=>r.className='',600);}}
+function clearTagTable(){$('tagTableBody').innerHTML='';tagMap={};totalReads=0;uniqueCount=0;rateWindow=[];$('statTotal').textContent='0';$('statUnique').textContent='0';$('statRate').textContent='0';$('badgeTags').textContent='0 tags';}
 
 // ═══════════════════════════════════════════════════════════════════════════
-// Init
-// ═══════════════════════════════════════════════════════════════════════════
-
-log('CL7206C2 RFID Test Tool ready', 'info');
-log('Enter reader IP and click CONNECT', 'info');
+clientLog('CL7206C2 RFID Test Tool ready','info');
+clientLog('Enter reader IP and click CONNECT','info');
 </script>
-
 </body>
 </html>
