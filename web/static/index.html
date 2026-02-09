@@ -544,7 +544,7 @@ async function loadInfo() {
   } catch(e) {}
 }
 
-async function loadNetwork() { try { const a=await api('GET','/api/network'), b=await api('GET','/api/mac'), c=await api('GET','/api/server'); showInfoOverlay('Network',{...a,...b,...c}); } catch(e) {} }
+async function loadNetwork() { try { const a=await api('GET','/api/network'), b=await api('GET','/api/mac'), c=await api('GET','/api/server'); let d={}; try { d=await api('GET','/api/dhcp'); } catch(e){} showInfoOverlay('Network',{...a,...b,...c,...d}); } catch(e) {} }
 async function loadAntennas() { try { showInfoOverlay('Antennas',await api('GET','/api/antennas')); } catch(e) {} }
 async function loadTriggers() { try { showInfoOverlay('Triggers',await api('GET','/api/triggers')); } catch(e) {} }
 async function loadWiegand() { try { showInfoOverlay('Wiegand',await api('GET','/api/wiegand')); } catch(e) {} }
@@ -559,6 +559,7 @@ const FIELD_INFO = {
   gateway: ['Gateway', 'Шлюз по умолчанию'],
   mac: ['MAC Address', 'Аппаратный адрес (сохраняется при factory reset)'],
   mode: ['Server/Client', 'SERVER: ридер слушает подключения. CLIENT: ридер подключается к серверу'],
+  dhcp_enabled: ['DHCP', '0 = Static IP, 1 = DHCP (автоматическое получение IP)'],
   // Antenna
   antenna_index: ['Antenna Index', 'Индекс RF порта (0-3)'],
   power_dbm: ['Power (dBm)', 'Мощность передатчика. 0-33 дБм. Больше = дальше читает'],
@@ -643,6 +644,15 @@ async function syncTime() { try { await api('POST','/api/settime',{}); clientLog
 // ═══════════════════════════════════════════════════════════════════════════
 async function loadNetworkConfig() {
   try { const n=await api('GET','/api/network'); if(n.ip)$('cfgIP').value=n.ip; if(n.mask)$('cfgMask').value=n.mask; if(n.gateway)$('cfgGW').value=n.gateway; clientLog(`Network: ${n.ip||'?'}`,'info','CMD'); } catch(e) {}
+  try {
+    const d=await api('GET','/api/dhcp');
+    const on=!!d.dhcp_enabled;
+    $('toggleDHCP').checked=on;
+    $('dhcpLabel').textContent=on?'ON (Auto IP)':'OFF (Static IP)';
+    $('staticIpFields').style.opacity=on?'0.4':'1';
+    $('staticIpFields').style.pointerEvents=on?'none':'auto';
+    clientLog(`DHCP: ${d.mode||'?'}`,'info','CMD');
+  } catch(e) {}
 }
 
 async function setDHCP(on) {

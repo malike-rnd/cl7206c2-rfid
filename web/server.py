@@ -461,6 +461,20 @@ async def get_ping():
         return parse_result(r.get_ping_config(), "get_ping")
 
 
+@app.get("/api/dhcp")
+async def get_dhcp():
+    """Get DHCP status via CMD=0x01, SUB=0x30 (GET DHCP config)."""
+    r = require_reader()
+    with reader_lock:
+        result = r.send_command(0x01, 0x30)
+    if result is None:
+        raise HTTPException(status_code=504, detail="No response from reader")
+    cmd, sub, payload = result
+    dhcp_enabled = payload[0] if payload else 0
+    log_cmd(f"get_dhcp: mode={dhcp_enabled} ({'DHCP' if dhcp_enabled else 'Static'})")
+    return {"dhcp_enabled": dhcp_enabled, "mode": "DHCP" if dhcp_enabled else "Static"}
+
+
 @app.get("/api/antenna/{port}")
 async def get_antenna(port: int):
     r = require_reader()
