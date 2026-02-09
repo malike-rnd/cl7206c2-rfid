@@ -592,10 +592,18 @@ async def reboot():
     global reader
     r = require_reader()
     with reader_lock:
-        result = parse_result(r.reboot(), "reboot")
+        try:
+            result = r.reboot()
+        except Exception:
+            result = None
+        # Reader drops TCP before responding — this is normal
+        try:
+            r.close()
+        except Exception:
+            pass
         reader = None
-    log_warn("Reader rebooting", "CMD")
-    return result
+    log_warn("Reader rebooting (~20s)", "CMD")
+    return {"status": "rebooting", "message": "Reader is rebooting. Reconnect in ~20 seconds."}
 
 
 @app.post("/api/factoryreset")
@@ -603,13 +611,17 @@ async def factory_reset():
     global reader
     r = require_reader()
     with reader_lock:
-        # Bypass interactive prompt in client — call send_command directly
-        from cl7206c2_client import build_packet
-        result = r.send_command(0x01, 0x14)
-        parsed = parse_result(result, "factory_reset")
+        try:
+            r.send_command(0x01, 0x14)
+        except Exception:
+            pass
+        try:
+            r.close()
+        except Exception:
+            pass
         reader = None
     log_warn("Factory reset — reader rebooting with defaults (MAC preserved)", "CMD")
-    return parsed
+    return {"status": "factory_reset", "message": "Factory reset sent. Reader rebooting with defaults. Reconnect to 192.168.1.116."}
 
 
 # ─── Inventory WebSocket ──────────────────────────────────────────────────────

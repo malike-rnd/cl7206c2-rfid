@@ -93,3 +93,38 @@
 2026-02-08 06:22:33 [DEBUG] [PROTO] get_tag_cache: 00
 2026-02-08 06:22:33 [INFO ] [CMD  ] get_tag_cache_time: OK (2 bytes)
 2026-02-08 06:22:33 [DEBUG] [PROTO] get_tag_cache_time: 0001
+2026-02-09 12:38:56 [INFO ] [SYS  ] Connecting to 192.168.1.116:9090...
+2026-02-09 12:38:56 [INFO ] [CMD  ] Connected to 192.168.1.116:9090
+2026-02-09 12:38:57 [INFO ] [CMD  ] get_info: OK (26 bytes)
+2026-02-09 12:38:57 [DEBUG] [PROTO] get_info: 000100130010434c37323036435f323031373036303223f15c1c
+2026-02-09 12:38:57 [INFO ] [CMD  ] get_time: OK (8 bytes)
+2026-02-09 12:38:57 [DEBUG] [PROTO] get_time: 6989ab320001ff71
+2026-02-09 12:38:57 [INFO ] [CMD  ] get_network: OK (12 bytes)
+2026-02-09 12:38:57 [DEBUG] [PROTO] get_network: c0a80174ffffff00c0a80101
+2026-02-09 12:38:57 [INFO ] [CMD  ] get_tag_cache: OK (1 bytes)
+2026-02-09 12:38:57 [DEBUG] [PROTO] get_tag_cache: 00
+2026-02-09 12:38:57 [INFO ] [CMD  ] get_tag_cache_time: OK (2 bytes)
+2026-02-09 12:38:57 [DEBUG] [PROTO] get_tag_cache_time: 0001
+2026-02-09 12:39:02 [INFO ] [CMD  ] set_dhcp: OK (1 bytes)
+2026-02-09 12:39:02 [DEBUG] [PROTO] set_dhcp: 00
+2026-02-09 12:40:25 [WARNING] [CMD  ] reboot: no response from reader
+2026-02-09 12:42:59 [INFO ] [CMD  ] Disconnected
+2026-02-09 12:43:01 [INFO ] [SYS  ] Connecting to 172.16.200.26:9090...
+2026-02-09 12:43:01 [INFO ] [CMD  ] Connected to 172.16.200.26:9090
+2026-02-09 12:43:02 [INFO ] [CMD  ] get_info: OK (26 bytes)
+2026-02-09 12:43:02 [DEBUG] [PROTO] get_info: 000100130010434c37323036435f323031373036303223f15d10
+2026-02-09 12:43:02 [INFO ] [CMD  ] get_time: OK (8 bytes)
+2026-02-09 12:43:02 [DEBUG] [PROTO] get_time: 6989ac26000cca44
+2026-02-09 12:43:02 [INFO ] [CMD  ] get_network: OK (12 bytes)
+2026-02-09 12:43:02 [DEBUG] [PROTO] get_network: ac10c81affffff00ac10c801
+2026-02-09 12:43:02 [INFO ] [CMD  ] get_tag_cache: OK (1 bytes)
+2026-02-09 12:43:02 [DEBUG] [PROTO] get_tag_cache: 00
+2026-02-09 12:43:02 [INFO ] [CMD  ] get_tag_cache_time: OK (2 bytes)
+2026-02-09 12:43:02 [DEBUG] [PROTO] get_tag_cache_time: 0001
+2026-02-09 12:44:18 [INFO ] [CMD  ] get_network: OK (12 bytes)
+2026-02-09 12:44:18 [DEBUG] [PROTO] get_network: ac10c81affffff00ac10c801
+2026-02-09 12:44:18 [INFO ] [CMD  ] get_mac: OK (6 bytes)
+2026-02-09 12:44:18 [DEBUG] [PROTO] get_mac: 6ceca1fe753a
+2026-02-09 12:44:18 [INFO ] [CMD  ] get_server_mode: OK (9 bytes)
+2026-02-09 12:44:18 [DEBUG] [PROTO] get_server_mode: 002382c0a801012382
+2026-02-09 12:45:14 [WARNING] [CMD  ] get_tags: no response from reader
